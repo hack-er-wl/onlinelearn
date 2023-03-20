@@ -1,0 +1,20 @@
+export default {
+    title:"在线学习平台",
+    mtitle:"在线学习平台后台",
+    signIn: "登录",
+    signUp: "注册",
+    userError: "请输入用户名",
+    emailError:"请输入邮箱地址",
+    codeError: "请输入验证码",
+    userPlaceholder: "请输入用户名",
+    emailPlaceholder: "请输入邮箱地址",
+    PWError: "请输入密码",
+    passPlaceholder: "请输入密码",
+    codePlaceholder:"请输入验证码",
+    getCode:"获取验证码",
+    PWSubError: "密码必须是3位以上的字母或者数字",
+    signInSuccess: "登录成功",
+    signUpSuccess: "注册成功",
+    signInFailed: "登录失败",
+    signUpFailed: "注册失败"
+};

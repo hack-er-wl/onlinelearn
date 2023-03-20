@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.AssessMapper">
+    <!-- 插入一个评论 -->
+    <insert id="postAssess" parameterType="org.example.entity.Assess">
+        insert into assesses(assess_id,course_id,user_id,assess_content,assess_rate,assess_time,assess_pointer) values (#{assess_id},#{course_id},#{user_id},#{assess_content},#{assess_rate},#{assess_time},#{assess_pointer})
+    </insert>
+    <!-- 根据id查询评论 -->
+    <select id="queryAssess" parameterType="java.lang.String" resultType="org.example.entity.Assess">
+        select * from assesses where course_id=#{course_id}
+    </select>
+    <!-- 删除一个评论 -->
+    <delete id="cancelAssess" parameterType="java.lang.String">
+        delete from assesses where user_id = #{user_id} and assess_id = #{assess_id}
+    </delete>
+    <!-- 插入一个回复 -->
+    <insert id="postReply" parameterType="org.example.entity.Reply">
+        insert into replies(reply_id,user_id,assess_id,accept_id,reply_content,reply_time,reply_pointer) values (#{reply_id},#{user_id},#{assess_id},#{accept_id},#{reply_content},#{reply_time},#{reply_pointer})
+    </insert>
+    <!-- 根据id查询回复 -->
+    <select id="queryReply" parameterType="java.lang.String" resultType="org.example.entity.Reply">
+        select * from replies where assess_id=#{assess_id}
+    </select>
+    <!-- 删除一个回复 -->
+    <delete id="cancelReply" parameterType="java.lang.String">
+        delete from replies where user_id = #{user_id} and reply_id = #{reply_id}
+    </delete>
+</mapper>

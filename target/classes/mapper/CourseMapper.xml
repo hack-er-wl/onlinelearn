@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.CourseMapper">
+    <!-- 根据课程id查询课程 -->
+    <select id="getCourseByCourseId" parameterType="java.lang.String" resultType="org.example.entity.Course">
+        select * from courses where course_id=#{course_id}
+    </select>
+    <!-- 推荐课程 -->
+    <select id="getRecommendCourse" parameterType="java.lang.Integer" resultType="org.example.entity.Course">
+        select * from courses order by rand() limit #{num}
+    </select>
+    <!-- 根据课程状态（热门/最新）查询课程 -->
+    <select id="getCourseByStatus" parameterType="java.lang.Integer" resultType="org.example.entity.Course">
+        select * from courses where course_status=#{course_status}
+    </select>
+    <!-- 根据课程类型id查询课程 -->
+    <select id="getCourseByClassId" parameterType="java.lang.String" resultType="org.example.entity.Course">
+        select * from courses where class_id=#{class_id}
+    </select>
+    <!-- 插入一个课程 -->
+    <insert id="insertCourse" parameterType="org.example.entity.Course">
+        insert into courses(course_id,class_id,teach_id,course_status,course_fee,course_name,course_brief,subscribe_num,course_cover) values (#{course_id},#{class_id},#{teach_id},#{course_status},#{course_fee},#{course_name},#{course_brief},#{subscribe_num},#{course_cover})
+    </insert>
+    <!-- 更新一个课程 -->
+    <update id="updateCourseSubNum" parameterType="org.example.entity.Course">
+        update courses set subscribe_num=#{subscribe_num} where course_id=#{course_id}
+    </update>
+    <!-- 插入一个课程领域 -->
+    <insert id="insertCourseField" parameterType="org.example.entity.CField">
+        insert into fields(field_id,field_name) values (#{field_id},#{field_name})
+    </insert>
+    <!-- 查询课程领域 -->
+    <select id="queryCourseField" resultType="org.example.entity.CField">
+        select * from fields
+    </select>
+    <!-- 插入一个课程类型 -->
+    <insert id="insertCourseClass" parameterType="org.example.entity.CClass">
+        insert into classes(class_id,field_id,class_name) values (#{class_id},#{field_id},#{class_name})
+    </insert>
+    <!-- 根据领域id查询课程类型-->
+    <select id="queryCourseClass" parameterType="java.lang.String" resultType="org.example.entity.CClass">
+        select * from classes where field_id = #{field_id}
+    </select>
+</mapper>

@@ -22,4 +22,9 @@ public class SliderService implements SliderServiceImpl {
     public List getSlider(int start, int end) {
         return userMapper.getSlider(start,end);
     }
+
+    @Override
+    public List getSliderAll() {
+        return userMapper.getSliderAll();
+    }
 }

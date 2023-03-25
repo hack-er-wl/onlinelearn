@@ -3,15 +3,17 @@ package org.example.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.MessageBox;
+import org.example.common.ApplicationHelper;
 import org.example.common.Utils;
+import org.example.entity.GetNoticeInfo;
+import org.example.entity.Notice;
+import org.example.entity.User;
 import org.springframework.stereotype.Service;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,12 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/websocket/{username}")
 /*实时通信服务*/
 public class SocketService {
+    private NoticeService noticeService = (NoticeService) ApplicationHelper.getBean("noticeService");
+    private  LoginService loginService = (LoginService) ApplicationHelper.getBean("loginService");
     //以用户的姓名为key，WebSocket为对象保存起来
     private static Map<String, SocketService> clients = new ConcurrentHashMap<>();
     //用来存在线连接数
     private static final Map<String, Session> sessions = new HashMap<>();
-    //离线列表
-    private static MessageBox messageBox = new MessageBox();
     /**
      * OnOpen 表示有浏览器链接过来的时候被调用
      * OnClose 表示浏览器发出关闭请求的时候被调用
@@ -39,20 +41,6 @@ public class SocketService {
             clients.put(username,this);
             sessions.put(username,session);
             log.info("有新连接接入！ 当前在线人数" + clients.size());
-            //若有广播消息
-            if(messageBox.hasKey("allPeople")){
-                for (Object message:messageBox.get("allPeople")) {
-                    sendMessageTo(JSON.toJSONString(message),username);
-                }
-            }
-            //若有单播消息
-            if(messageBox.hasKey(username)) {
-                for(Object message:messageBox.get(username)) {
-                    log.info("open"+message);
-                    sendMessageTo(JSON.toJSONString(message),username);
-                    messageBox.move(username);
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
             log.info(username + "上线时发生了错误！");
@@ -69,49 +57,65 @@ public class SocketService {
     }
     @OnMessage
     public void onMessage(String message,Session session) {
+        log.info("来自客户端消息：" + message + "客户端的id是：" + session.getId());
+        JSONObject jsonObject = JSON.parseObject(message);
+        String textMessage = jsonObject.getString("message");
+        String fromusername = jsonObject.getString("username");
+        String tousername = jsonObject.getString("to");
+        String time = jsonObject.getString("time");
+        Map<String, Object> map1 = new HashMap<>();
+        String id = Utils.getId();
+        map1.put("noticeid",id);
+        map1.put("textMessage", textMessage);
+        map1.put("fromusername", fromusername);
+        map1.put("tousername", tousername);
+        map1.put("time", time);
+        if(!fromusername.equals("0000000001")){
+            User user = loginService.getUserById(fromusername);
+            map1.put("head",user.getUser_head());
+        }
+        Notice notice = new Notice(id,textMessage,Utils.getTime(),fromusername,tousername);
         try {
-            log.info("来自客户端消息：" + message + "客户端的id是：" + session.getId());
-            JSONObject jsonObject = JSON.parseObject(message);
-            String textMessage = jsonObject.getString("message");
-            String fromusername = jsonObject.getString("username");
-            String tousername = jsonObject.getString("to");
-            String time = jsonObject.getString("time");
-            Map<String, Object> map1 = new HashMap<>();
-            map1.put("textMessage", textMessage);
-            map1.put("fromusername", fromusername);
-            map1.put("tousername", tousername);
-            map1.put("time", time);
-            if(clients.containsKey(tousername))
-                sendMessageTo(JSON.toJSONString(map1), tousername);
-            else
-                messageBox.add(tousername,map1);
+            sendMessageTo(notice,JSON.toJSONString(map1),tousername);
         } catch (Exception e) {
             log.info("发生了错误了！");
         }
-        log.info(clients.toString());
+        log.info(sessions.toString());
     }
     //发送单播消息
-    public void sendMessageTo(String message, String ToUserName) throws IOException {
+    public void sendMessageTo(Notice notice,String message, String ToUserName) throws IOException {
         log.info("websocket服务端单播消息:" + message);
-        if(clients.get(ToUserName) != null){
-            synchronized(sessions.get(ToUserName)){
-                sessions.get(ToUserName).getBasicRemote().sendText(message);
-            }
+        noticeService.postNotice(notice);
+        Session session = sessions.get(ToUserName);
+        if(session != null){
+            session.getBasicRemote().sendText(message);
+            GetNoticeInfo getNoticeInfo = new GetNoticeInfo(ToUserName,notice.getNotice_id());
+            noticeService.noticeGet(getNoticeInfo);
         }
     }
     //发送广播消息
     public void sendMessageAll(String message){
         Map<String, Object> map1 = new HashMap<>();
+        String time = Utils.getTime();
+        String id = Utils.getId();
+        map1.put("noticeid",id);
         map1.put("textMessage", message);
-        map1.put("fromusername","系统");
-        map1.put("tousername","allPeople");
-        map1.put("time", Utils.getTime());
+        map1.put("fromusername","0000000000");
+        map1.put("tousername","0000000002");
+        map1.put("time",time);
         log.info("websocket服务端广播消息:" + JSON.toJSONString(map1));
-        messageBox.add("allPeople",map1);
+        //生成一个通知id及对象,其中id：000000002代表所有人
+        Notice notice = new Notice(id,message,time,"0000000000","0000000002");
+        //插入数据库
+        noticeService.postNotice(notice);
+        //发送给当前在线用户
         for(Map.Entry<String,Session> session:sessions.entrySet()){
             try {
-                if (session.getValue().isOpen()) {
+                if (session.getValue().isOpen() && !session.getKey().equals("0000000001")) {
                     session.getValue().getBasicRemote().sendText(JSON.toJSONString(map1));
+                    //已经收到通知的用户插入收到信息
+                    GetNoticeInfo getNoticeInfo = new GetNoticeInfo(session.getKey(),id);
+                    noticeService.noticeGet(getNoticeInfo);
                 }
             } catch (Exception e) {
                 log.info("广播时出现错误！");

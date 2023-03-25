@@ -3,7 +3,7 @@
     <option name="myName" value="Project Default" />
     <inspection_tool class="DuplicatedCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <Languages>
-        <language minSize="91" name="Java" />
+        <language minSize="112" name="Java" />
       </Languages>
     </inspection_tool>
     <inspection_tool class="IncorrectHttpHeaderInspection" enabled="true" level="WARNING" enabled_by_default="true">
@@ -11,6 +11,18 @@
         <set>
           <option value="token" />
         </set>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="MavenPackageUpdate" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="excludeList">
+        <list>
+          <option value="org.springframework.boot:spring-boot-starter-mail" />
+          <option value="com.auth0:java-jwt" />
+          <option value="com.alibaba:fastjson" />
+          <option value="com.baomidou:mybatis-plus-boot-starter" />
+          <option value="org.apache.commons:commons-lang3" />
+          <option value="org.springframework:spring-jdbc" />
+        </list>
       </option>
     </inspection_tool>
   </profile>

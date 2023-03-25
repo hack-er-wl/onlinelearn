@@ -26,13 +26,31 @@ public class CourseService implements CourseServiceImpl {
     }
 
     @Override
-    public List getRecommendCourse(int num) {
-        return courseMapper.getRecommendCourse(num);
+    public List getCourseByClassId(String class_id) {
+        return courseMapper.getCourseByClassId(class_id);
+    }
+    @Override
+    public List getChapterByCourseId(String course_id) {
+        return courseMapper.getChapterByCourseId(course_id);
     }
 
     @Override
-    public List getCourseByClassId(String class_id) {
-        return courseMapper.getCourseByClassId(class_id);
+    public List getBarByChapterId(String chapter_id) {
+        return courseMapper.getBarByChapterId(chapter_id);
+    }
+
+    @Override
+    public List getRecommendCourse(int num) {
+        return courseMapper.getRecommendCourse(num);
+    }
+    @Override
+    public List queryClassByClassName(String class_id) {
+        return courseMapper.queryClassByClassName(class_id);
+    }
+
+    @Override
+    public CClass queryClassByClassId(String class_id) {
+        return courseMapper.queryClassByClassId(class_id);
     }
 
     @Override
@@ -56,6 +74,21 @@ public class CourseService implements CourseServiceImpl {
     }
 
     @Override
+    public List queryCourseClassAll() {
+        return courseMapper.queryCourseClassAll();
+    }
+
+    @Override
+    public List queryCourseAll() {
+        return courseMapper.queryCourseAll();
+    }
+
+    @Override
+    public CField queryCourseFieldById(String field_id) {
+        return courseMapper.queryCourseFieldById(field_id);
+    }
+
+    @Override
     public int insertCourseClass(CClass cClass) {
         return courseMapper.insertCourseClass(cClass);
     }
@@ -63,6 +96,16 @@ public class CourseService implements CourseServiceImpl {
     @Override
     public List queryCourseClass(String field_id) {
         return courseMapper.queryCourseClass(field_id);
+    }
+
+    @Override
+    public List queryCClassByStatus(int status) {
+        return courseMapper.queryCClassByStatus(status);
+    }
+
+    @Override
+    public List getClassByClassName(String class_name) {
+        return courseMapper.queryClassByClassName(class_name);
     }
 
     @Override

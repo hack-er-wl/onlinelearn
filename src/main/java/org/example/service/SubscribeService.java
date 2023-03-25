@@ -48,6 +48,11 @@ public class SubscribeService implements SubscribeServiceImpl {
     }
 
     @Override
+    public List queryCollectCourseByUid(String user_id) {
+        return subscribeMapper.queryCollectCourseByUid(user_id);
+    }
+
+    @Override
     public int cancelSubscribeCourse(String user_id, String course_id) {
         return subscribeMapper.cancelSubscribeCourse(user_id,course_id);
     }

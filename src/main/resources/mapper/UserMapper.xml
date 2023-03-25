@@ -9,6 +9,22 @@
     <select id="getUserById" parameterType="java.lang.String" resultType="org.example.entity.User">
         select * from users where user_id = #{user_id}
     </select>
+    <!-- 根据所有用户 -->
+    <select id="getUserAll" resultType="org.example.entity.User">
+        select * from users
+    </select>
+    <!-- 根据所有讲师 -->
+    <select id="getTeacherAll" resultType="org.example.entity.Teacher">
+        select * from teachers
+    </select>
+    <!-- 更新一个用户 -->
+    <update id="updateUser" parameterType="org.example.entity.User">
+        update users set user_like=#{user_like},user_add=#{user_add} where user_id=#{user_id}
+    </update>
+    <!-- 更新用户密码 -->
+    <update id="updateUserPass" parameterType="org.example.entity.User">
+        update users set user_pass=#{user_pass} where user_id=#{user_id}
+    </update>
     <!-- 插入一个用户 -->
     <insert id="insertUser" parameterType="org.example.entity.User">
         insert into users(user_id,user_name,e_mail,user_pass,user_like,user_add,user_head) values (#{user_id},#{user_name},#{e_mail},#{user_pass},#{user_like},#{user_add},#{user_head})
@@ -20,5 +36,9 @@
     <!-- 查询轮播图 -->
     <select id="getSlider" parameterType="java.lang.Integer" resultType="org.example.entity.Slider">
         select * from sliders order by slider_id asc limit #{start},#{end}
+    </select>
+    <!-- 查询所有的轮播图 -->
+    <select id="getSliderAll" resultType="org.example.entity.Slider">
+        select * from sliders
     </select>
 </mapper>

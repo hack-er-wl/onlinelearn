@@ -11,6 +11,6 @@
     </select>
     <!-- 插入一个讲师 -->
     <insert id="insertTeacher" parameterType="org.example.entity.Teacher">
-        insert into teachers(teach_id,user_id,user_tel,user_sex,user_age,user_tage,user_brief) values (#{teach_id},#{user_id},#{user_tel},#{user_sex},#{user_age},#{user_tage},#{user_brief})
+        insert into teachers(teach_id,user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief) values (#{teach_id},#{user_id},#{user_tel},#{teach_field},#{teach_class},#{user_sex},#{user_age},#{user_tage},#{user_brief})
     </insert>
 </mapper>

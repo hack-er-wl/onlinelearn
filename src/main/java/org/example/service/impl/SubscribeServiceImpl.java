@@ -17,6 +17,7 @@ public interface SubscribeServiceImpl {
     List queryOrder(String user_id);
     SubscribeInfo querySubscribeCourse(String user_id, String course_id);
     CollectInfo queryCollectCourse(String user_id, String course_id);
+    List queryCollectCourseByUid(String user_id);
     int cancelSubscribeCourse(String user_id,String course_id);
     int cancelCollectCourse(String user_id,String course_id);
 }

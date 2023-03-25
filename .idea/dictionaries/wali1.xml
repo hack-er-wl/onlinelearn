@@ -4,13 +4,22 @@
       <w>acceptid</w>
       <w>allcourse</w>
       <w>assessid</w>
+      <w>barname</w>
+      <w>barorder</w>
+      <w>barurl</w>
       <w>byclassid</w>
+      <w>byclassname</w>
       <w>bycourseid</w>
       <w>bystatus</w>
+      <w>byuid</w>
       <w>cclass</w>
       <w>cfield</w>
+      <w>chapterid</w>
+      <w>chaptername</w>
+      <w>chapterorder</w>
       <w>classid</w>
       <w>coursebrief</w>
+      <w>coursecard</w>
       <w>coursecover</w>
       <w>coursefee</w>
       <w>courseid</w>
@@ -18,6 +27,9 @@
       <w>fieldid</w>
       <w>fieldname</w>
       <w>hotcourse</w>
+      <w>newpass</w>
+      <w>noticeid</w>
+      <w>oldpass</w>
       <w>orderid</w>
       <w>sliderid</w>
       <w>sliderurl</w>
@@ -25,6 +37,7 @@
       <w>teacid</w>
       <w>userage</w>
       <w>userbrief</w>
+      <w>usercard</w>
       <w>usersex</w>
       <w>usertage</w>
       <w>usertel</w>

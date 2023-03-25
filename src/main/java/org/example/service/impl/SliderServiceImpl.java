@@ -10,4 +10,5 @@ import java.util.List;
 public interface SliderServiceImpl {
     int insertSlider(Slider slider);
     List getSlider(int start, int end);
+    List getSliderAll();
 }

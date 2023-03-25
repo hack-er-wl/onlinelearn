@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.NoticeMapper">
+    <!-- 插入一个通知 -->
+    <insert id="insertNotice" parameterType="org.example.entity.Notice">
+        insert into notices(notice_id,notice_content,notice_time,from_user,to_user) values (#{notice_id},#{notice_content},#{notice_time},#{from_user},#{to_user})
+    </insert>
+    <!-- 插入一个通知接收信息 -->
+    <insert id="insertNoticeGet" parameterType="org.example.entity.GetNoticeInfo">
+        insert into get_notice(user_id,notice_id) values (#{user_id},#{notice_id})
+    </insert>
+    <!-- 根据用户id查询该用户收到的信息 -->
+    <select id="queryAcceptMessageById" parameterType="java.lang.String" resultType="org.example.entity.Notice">
+        select * from notices where to_user=#{tousername}
+    </select>
+    <!-- 根据用户id查询该用户发送出去的信息 -->
+    <select id="querySendMessageById" parameterType="java.lang.String" resultType="org.example.entity.Notice">
+        select * from notices where from_user=#{fromusername}
+    </select>
+    <!-- 查询所有的通知 -->
+    <select id="queryAllNotice" resultType="org.example.entity.Notice">
+        select * from notices
+    </select>
+    <!-- 查询该用户是否收到过该系统通知 -->
+    <select id="queryGetNoticeById" parameterType="org.example.entity.GetNoticeInfo" resultType="org.example.entity.GetNoticeInfo">
+        select * from get_notice where notice_id=#{notice_id} and user_id=#{user_id}
+    </select>
+</mapper>

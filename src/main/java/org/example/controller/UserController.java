@@ -19,6 +19,8 @@ public class UserController {
     @Resource
     private LoginService loginService;
     @Resource
+    private UpdateService updateService;
+    @Resource
     private CourseService courseService;
     @Resource
     private ApplyService applyService;
@@ -28,6 +30,8 @@ public class UserController {
     private SubscribeService subscribeService;
     @Resource
     private AssessService assessService;
+    @Resource
+    private NoticeService noticeService;
     @Resource
     private HttpServletResponse response;
 
@@ -54,7 +58,7 @@ public class UserController {
     @ResponseBody
     public Result login(@RequestParam(value = "email") String email,
                       @RequestParam(value = "password") String password) {
-        User user = (User)loginService.login(email);
+        User user = loginService.login(email);
         boolean bool = user.getUser_pass().equals(password);
         if(bool) {
             //获取token
@@ -65,6 +69,35 @@ public class UserController {
             result =  new Result(user,"登录成功",200);
         }else{
             result = new Result("","邮箱或密码错误",404);
+        }
+        return result;
+    }
+    //完善用户信息
+    @RequestMapping("/update")
+    @ResponseBody
+    public Result update(@RequestParam(value = "userid") String user_id,
+                         @RequestParam(value = "address") String user_add,
+                        @RequestParam(value = "like") String user_like) {
+        User user = courseService.getUserById(user_id);
+        user.setUser_add(user_add);
+        user.setUser_like(user_like);
+        int res = updateService.updateUser(user);
+        result = res == 1 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //修改密码
+    @RequestMapping("/update/password")
+    @ResponseBody
+    public Result updatePass(@RequestParam(value = "userid") String user_id,
+                         @RequestParam(value = "oldpass") String old_pass,
+                         @RequestParam(value = "newpass") String new_pass) {
+        User user = courseService.getUserById(user_id);
+        if(user.getUser_pass().equals(old_pass)){
+            user.setUser_pass(new_pass);
+            int res = updateService.updateUserPass(user);
+            result = new Result(res,"操作成功",200);
+        }else{
+            result = new Result("","操作失败",404);
         }
         return result;
     }
@@ -92,19 +125,34 @@ public class UserController {
         result = course != null ? new Result(course,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
-    //根据课程类型查询
+    //根据课程类型id查询
     @RequestMapping("/query/course/byclassid")
     @ResponseBody
     public Result getCourseByClassId(@RequestParam(value = "classid") String class_id){
-        List list  = courseService.getCourseByClassId(class_id);
-        result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+        List<Course> list  = courseService.getCourseByClassId(class_id);
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //根据课程类型名称查询
+    @RequestMapping("/query/course/byclassname")
+    @ResponseBody
+    public Result getCourseByClassName(@RequestParam(value = "classname") String class_name){
+        List<CClass> list  = courseService.queryClassByClassName(class_name);
+        List<Course> res = new ArrayList<>();
+        if(list.size() != 0){
+            for(CClass cClass:list){
+                res.addAll(courseService.getCourseByClassId(cClass.getClass_id()));
+            }
+        }
+        result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
     //获取轮播图
     @RequestMapping("/query/slider")
     @ResponseBody
-    public Result getSlider(@RequestParam(value = "start") int start,
-                            @RequestParam(value = "end") int end){
+    public Result getSlider(
+            @RequestParam(value = "start") int start,
+            @RequestParam(value = "end") int end){
         Object obj = sliderService.getSlider(start,end);
         result = obj != null ? new Result(obj,"操作成功",200):new Result("","操作失败",404);
         return result;
@@ -133,16 +181,37 @@ public class UserController {
     @RequestMapping("/query/cfield")
     @ResponseBody
     public Result getCField() {
-        List list = courseService.queryCourseField();
-        result =  list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+        List<CField> list = courseService.queryCourseField();
+        List<Map> res = new ArrayList<>();
+        for(CField cField:list){
+            Map<String,Object> map = new HashMap<>();
+            List<CClass> classes = courseService.queryCourseClass(cField.getField_id());
+            map.put("field_id",cField.getField_id());
+            map.put("field_name",cField.getField_name());
+            map.put("classes",classes);
+            res.add(map);
+        }
+        result =  res != null ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
-    //查询领域
-    @RequestMapping("/query/cclass")
+    //根据状态查询类型
+    @RequestMapping("/query/cclass/status")
     @ResponseBody
-    public Result getCClass(@RequestParam(value = "fieldid") String field_id) {
-        List list = courseService.queryCourseClass(field_id);
-        result =  list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+    public Result getCClassByStatus(@RequestParam(value = "status") int class_status) {
+        List<CClass> list = courseService.queryCClassByStatus(class_status);
+        List<Map> res = new ArrayList<>();
+        if(list.size() != 0){
+            for(CClass cClass:list){
+                Map<String,Object> map = new HashMap();
+                map.put("class_id",cClass.getClass_id());
+                CField cField = courseService.queryCourseFieldById(cClass.getField_id());
+                map.put("field_name",cField.getField_name());
+                map.put("class_name",cClass.getClass_name());
+                map.put("class_status",cClass.getClass_status());
+                res.add(map);
+            }
+        }
+        result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
     //订阅课程
@@ -227,6 +296,32 @@ public class UserController {
         result = info != null ? new Result(info,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
+    //通过userid查询所有的收藏课程
+    @RequestMapping("/query/collect/byuid")
+    @ResponseBody
+    public Result queryCollectCourseByUid(
+            @RequestParam(value = "userid") String user_id) {
+        List<CollectInfo> infos = subscribeService.queryCollectCourseByUid(user_id);
+        List<Map> list = new ArrayList<>();
+        for (CollectInfo info:infos) {
+            Map<String,Object> map = new HashMap<>();
+            Course course = courseService.getCourseByCourseId(info.getCourse_id());
+            Teacher teacher = courseService.getTeacherByCourseId(info.getCourse_id());
+            map.put("course_id",course.getCourse_id());
+            map.put("class_id",course.getClass_id());
+            map.put("teach_id",course.getTeach_id());
+            map.put("course_status",course.getCourse_status());
+            map.put("course_fee",course.getCourse_fee());
+            map.put("course_name",course.getCourse_name());
+            map.put("course_brief",course.getCourse_brief());
+            map.put("subscribe_num",course.getSubscribe_num());
+            map.put("course_cover",course.getCourse_cover());
+            map.put("teach_name",courseService.getUserById(teacher.getUser_id()).getUser_name());
+            list.add(map);
+        }
+        result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
     //取消收藏课程
     @RequestMapping("/cancel/collect")
     @ResponseBody
@@ -259,6 +354,23 @@ public class UserController {
         for(Assess assess:list){
             Map<Object,Object> map = new HashMap();
             User user = assessService.queryUserById(assess.getUser_id());
+            List<Reply> replies = assessService.queryReply(assess.getAssess_id());
+            List<Map> replies_res = new ArrayList<>();
+            for(Reply reply:replies){
+                Map<Object,Object> replies_map = new HashMap();
+                User send = assessService.queryUserById(reply.getUser_id());
+                User accept = assessService.queryUserById(reply.getAccept_id());
+                replies_map.put("user_name",send.getUser_name());
+                replies_map.put("reply_id",reply.getReply_id());
+                replies_map.put("user_id",reply.getUser_id());
+                replies_map.put("assess_id",reply.getAssess_id());
+                replies_map.put("reply_content",reply.getReply_content());
+                replies_map.put("reply_time",reply.getReply_time());
+                replies_map.put("reply_pointer",reply.getReply_pointer());
+                replies_map.put("user_head",send.getUser_head());
+                replies_map.put("accept_name",accept.getUser_name());
+                replies_res.add(replies_map);
+            }
             map.put("user_name",user.getUser_name());
             map.put("assess_id",assess.getAssess_id());
             map.put("course_id",assess.getCourse_id());
@@ -268,6 +380,7 @@ public class UserController {
             map.put("assess_time",assess.getAssess_time());
             map.put("assess_pointer",assess.getAssess_pointer());
             map.put("user_head",user.getUser_head());
+            map.put("replies",replies_res);
             res.add(map);
         }
         result = res != null ? new Result(res,"操作成功",200):new Result("","操作失败",404);
@@ -286,43 +399,84 @@ public class UserController {
         result = res == 1 ? new Result(reply,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
-    //查询回复
-    @RequestMapping("/query/reply")
-    @ResponseBody
-    public Result queryReply(@RequestParam(value = "assessid") String assess_id) {
-        List<Reply> list = assessService.queryReply(assess_id);
-        List<Map> res = new ArrayList<>();
-        for(Reply reply:list){
-            Map<Object,Object> map = new HashMap();
-            User user = assessService.queryUserById(reply.getUser_id());
-            User accept = assessService.queryUserById(reply.getAccept_id());
-            map.put("user_name",user.getUser_name());
-            map.put("reply_id",reply.getReply_id());
-            map.put("user_id",reply.getUser_id());
-            map.put("assess_id",reply.getAssess_id());
-            map.put("reply_content",reply.getReply_content());
-            map.put("reply_time",reply.getReply_time());
-            map.put("reply_pointer",reply.getReply_pointer());
-            map.put("user_head",user.getUser_head());
-            map.put("accept_name",accept.getUser_name());
-            res.add(map);
-        }
-        result = res != null ? new Result(res,"操作成功",200):new Result("","操作失败",404);
-        return result;
-    }
     //申请成为讲师
     @RequestMapping("/apply")
     @ResponseBody
     public Result userApply(
             @RequestParam(value = "userid") String user_id,
             @RequestParam(value = "usertel") String user_tel,
+            @RequestParam(value = "field") String teach_field,
+            @RequestParam(value = "class") String teach_class,
             @RequestParam(value = "usersex") int user_sex,
             @RequestParam(value = "userage") int user_age,
             @RequestParam(value = "usertage") int user_tage,
             @RequestParam(value = "userbrief") String user_brief){
-        Teacher teacher = new Teacher(Utils.getId(),user_id,user_tel,user_sex,user_age,user_tage,user_brief);
+        Teacher teacher = new Teacher(Utils.getId(),user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief);
         int res = (int)applyService.applyForTeacher(teacher);
         result = res == 1 ? new Result(teacher,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //查询聊天信息
+    @RequestMapping("/query/message")
+    @ResponseBody
+    public Result userQueryMessage(@RequestParam(value = "userid") String user_id){
+        List<Notice> accept = noticeService.queryAcceptMessageById(user_id);
+        List<Notice> send = noticeService.querySendMessageById(user_id);
+        Map<String,List> map = new HashMap<>();
+        map.put("accept",accept);
+        map.put("send",send);
+        result = map != null ? new Result(map,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //查询系统通知
+    @RequestMapping("/query/notice")
+    @ResponseBody
+    public Result userQueryNotice(@RequestParam(value = "userid") String user_id){
+        List<Notice> notices = noticeService.querySystemNotice();
+        List<Notice> accept = new ArrayList<>();
+        List<Notice> no_accept = new ArrayList<>();
+        for(Notice notice:notices){
+            GetNoticeInfo noticeInfo = new GetNoticeInfo(user_id,notice.getNotice_id());
+            if(noticeService.queryGetNoticeById(noticeInfo) != null){
+                accept.add(notice);
+            }else{
+                no_accept.add(notice);
+            }
+        }
+        Map<String,List> map = new HashMap<>();
+        map.put("accept",accept);
+        map.put("no_accept",no_accept);
+        result = map != null ? new Result(map,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //将系统通知设置为已收到
+    @RequestMapping("/query/notice/set")
+    @ResponseBody
+    public Result userSetNoticeAccept(
+            @RequestParam(value = "noticeid") String notice_id,
+            @RequestParam(value = "userid") String user_id){
+        GetNoticeInfo noticeInfo = new GetNoticeInfo(user_id,notice_id);
+        int res = noticeService.noticeGet(noticeInfo);
+        result = res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //根据课程id查询课程章节
+    @RequestMapping("/query/chapter")
+    @ResponseBody
+    public Result queryChapter(@RequestParam(value = "courseid") String course_id){
+        List<Chapter> list = courseService.getChapterByCourseId(course_id);
+        List<Map> res = new ArrayList<>();
+        for(Chapter chapter:list){
+            Map<String,Object> map = new HashMap<>();
+            List<Bar> bars = courseService.getBarByChapterId(chapter.getChapter_id());
+            map.put("chapter_id",chapter.getChapter_id());
+            map.put("course_id",chapter.getCourse_id());
+            map.put("chapter_order",chapter.getChapter_order());
+            map.put("chapter_name",chapter.getChapter_name());
+            map.put("bars",bars);
+            res.add(map);
+        }
+        result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
 }

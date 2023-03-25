@@ -13,7 +13,12 @@ public class ApplyService implements ApplyServiceImpl {
     private TeacherMapper teacherMapper;
 
     @Override
-    public Object applyForTeacher(Teacher teacher) {
+    public int applyForTeacher(Teacher teacher) {
         return teacherMapper.insertTeacher(teacher);
+    }
+
+    @Override
+    public Teacher checkTeacher(String user_id) {
+        return teacherMapper.checkTeacher(user_id);
     }
 }

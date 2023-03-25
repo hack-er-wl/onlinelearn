@@ -5,5 +5,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface ApplyServiceImpl {
-    Object applyForTeacher(Teacher teacher);
+    int applyForTeacher(Teacher teacher);
+    Teacher checkTeacher(String user_id);
 }

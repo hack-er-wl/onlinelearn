@@ -5,6 +5,8 @@ import org.example.common.Utils;
 import org.example.entity.Bar;
 import org.example.entity.Chapter;
 import org.example.entity.Course;
+import org.example.entity.Teacher;
+import org.example.service.ApplyService;
 import org.example.service.PostService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +20,17 @@ import javax.annotation.Resource;
 public class TeacherController {
     @Resource
     private PostService postService;
+    @Resource
+    private ApplyService applyService;
     private Result result;
+    //发布课程小节
+    @RequestMapping("/check")
+    @ResponseBody
+    public Result checkTeacher(@RequestParam(value = "userid") String user_id) {
+        Teacher teacher = applyService.checkTeacher(user_id);
+        result = teacher != null ? new Result(teacher,"操作成功",200):new Result("","你不是讲师，请先申请讲师！",500);
+        return result;
+    }
     //发布课程
     @RequestMapping("/post/course")
     @ResponseBody

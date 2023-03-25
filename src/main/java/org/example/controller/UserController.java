@@ -412,8 +412,13 @@ public class UserController {
             @RequestParam(value = "usertage") int user_tage,
             @RequestParam(value = "userbrief") String user_brief){
         Teacher teacher = new Teacher(Utils.getId(),user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief);
-        int res = (int)applyService.applyForTeacher(teacher);
-        result = res == 1 ? new Result(teacher,"操作成功",200):new Result("","操作失败",404);
+        Teacher isTeacher = applyService.checkTeacher(user_id);
+        if(isTeacher == null){
+            int res = applyService.applyForTeacher(teacher);
+            result = res == 1 ? new Result(teacher,"操作成功",200):new Result("","操作失败",404);
+        }else{
+            result =  new Result("","你已经是讲师，请进入'我是讲师'界面操作！",500);
+        }
         return result;
     }
     //查询聊天信息

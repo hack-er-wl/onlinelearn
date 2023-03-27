@@ -88,7 +88,7 @@ public class TeacherController {
         String test_id = Utils.getId();
         Test test = new Test(test_id,course_id,teach_id,ques_num,Utils.getTime(),use_time);
         int res = testService.postTest(test);
-        result = res == 1 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        result = res == 1 ? new Result(test,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
     //发布课程章节

@@ -31,6 +31,7 @@
       <w>noticeid</w>
       <w>oldpass</w>
       <w>orderid</w>
+      <w>quesnum</w>
       <w>sliderid</w>
       <w>sliderurl</w>
       <w>teachid</w>
@@ -41,6 +42,7 @@
       <w>usersex</w>
       <w>usertage</w>
       <w>usertel</w>
+      <w>usetime</w>
     </words>
   </dictionary>
 </component>

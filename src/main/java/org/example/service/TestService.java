@@ -3,10 +3,11 @@ package org.example.service;
 import org.example.entity.Test;
 import org.example.mapper.TestMapper;
 import org.example.service.impl.TestServiceImpl;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-
+@Service
 public class TestService implements TestServiceImpl {
     @Resource
     private TestMapper testMapper;

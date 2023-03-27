@@ -27,4 +27,5 @@ public interface CourseServiceImpl {
     List getClassByClassName(String class_name);
     Teacher getTeacherByCourseId(String course_id);
     User getUserById(String user_id);
+    List queryCourseTeacherPost(String teach_id);
 }

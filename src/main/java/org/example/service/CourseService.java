@@ -117,4 +117,9 @@ public class CourseService implements CourseServiceImpl {
     public User getUserById(String user_id) {
         return userMapper.getUserById(user_id);
     }
+
+    @Override
+    public List queryCourseTeacherPost(String teach_id) {
+        return teacherMapper.queryCourse(teach_id);
+    }
 }

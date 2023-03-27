@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.TestMapper">
+    <!-- 根据课程id查询测试 -->
+    <select id="queryTestByCourseId" parameterType="java.lang.String" resultType="org.example.entity.Test">
+        select * from tests where course_id=#{course_id}
+    </select>
+    <!-- 插入一个测试 -->
+    <insert id="insertTest" parameterType="org.example.entity.Test">
+        insert into tests(test_id,teach_id,ques_num,test_time,use_time) values (#{test_id},#{teach_id},#{ques_num},#{test_time},#{use_time})
+    </insert>
+</mapper>

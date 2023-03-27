@@ -2,18 +2,20 @@ package org.example.controller;
 
 import org.example.common.Result;
 import org.example.common.Utils;
-import org.example.entity.Bar;
-import org.example.entity.Chapter;
-import org.example.entity.Course;
-import org.example.entity.Teacher;
+import org.example.entity.*;
 import org.example.service.ApplyService;
+import org.example.service.CourseService;
 import org.example.service.PostService;
+import org.example.service.TestService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/teacher")
@@ -21,14 +23,42 @@ public class TeacherController {
     @Resource
     private PostService postService;
     @Resource
+    private CourseService courseService;
+    @Resource
     private ApplyService applyService;
+    @Resource
+    private TestService testService;
     private Result result;
-    //发布课程小节
+    //讲师身份判断
     @RequestMapping("/check")
     @ResponseBody
     public Result checkTeacher(@RequestParam(value = "userid") String user_id) {
         Teacher teacher = applyService.checkTeacher(user_id);
-        result = teacher != null ? new Result(teacher,"操作成功",200):new Result("","你不是讲师，请先申请讲师！",500);
+        if(teacher != null){
+            User user = courseService.getUserById(teacher.getUser_id());
+            Map<Object,Object> map = new HashMap();
+            map.put("teach_id",teacher.getTeach_id());
+            map.put("user_id",teacher.getUser_id());
+            map.put("user_tel",teacher.getUser_tel());
+            map.put("user_sex",teacher.getUser_sex());
+            map.put("user_age",teacher.getUser_age());
+            map.put("user_tage",teacher.getUser_tage());
+            map.put("user_brief",teacher.getUser_brief());
+            map.put("user_name",user.getUser_name());
+            map.put("e_mail",user.getE_mail());
+            map.put("user_head",user.getUser_head());
+            result = map != null ? new Result(map,"操作成功",200):new Result("","操作失败",500);
+        }else{
+            result = new Result("","你不是讲师，请先申请讲师！",200);
+        }
+        return result;
+    }
+    //查询该讲师发布的课程
+    @RequestMapping("/query/course")
+    @ResponseBody
+    public Result queryCourse(@RequestParam(value = "teachid") String teach_id) {
+        List<Course> list = courseService.queryCourseTeacherPost(teach_id);
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
     //发布课程
@@ -45,6 +75,20 @@ public class TeacherController {
         Course course = new Course(course_id,class_id,teach_id,0,course_fee,course_name,course_brief,0,course_cover);
         int res = postService.postCourse(course);
         result = res == 1 ? new Result(course,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //发布测试
+    @RequestMapping("/post/test")
+    @ResponseBody
+    public Result postTest(
+            @RequestParam(value = "teachid") String teach_id,
+            @RequestParam(value = "courseid") String course_id,
+            @RequestParam(value = "quesnum") int ques_num,
+            @RequestParam(value = "usetime") int use_time) {
+        String test_id = Utils.getId();
+        Test test = new Test(test_id,course_id,teach_id,ques_num,Utils.getTime(),use_time);
+        int res = testService.postTest(test);
+        result = res == 1 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
     //发布课程章节

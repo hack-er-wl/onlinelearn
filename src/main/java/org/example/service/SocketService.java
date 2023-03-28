@@ -113,9 +113,6 @@ public class SocketService {
             try {
                 if (session.getValue().isOpen() && !session.getKey().equals("0000000001")) {
                     session.getValue().getBasicRemote().sendText(JSON.toJSONString(map1));
-                    //已经收到通知的用户插入收到信息
-                    GetNoticeInfo getNoticeInfo = new GetNoticeInfo(session.getKey(),id);
-                    noticeService.noticeGet(getNoticeInfo);
                 }
             } catch (Exception e) {
                 log.info("广播时出现错误！");

@@ -15,6 +15,10 @@ public class MenuService implements MenuServiceImpl {
     public List getMenu(int role) {
         return menuMapper.getMenu(role);
     }
+    @Override
+    public List getMenuAll() {
+        return menuMapper.getMenuAll();
+    }
 
     @Override
     public int insertMenu(Menu menu) {

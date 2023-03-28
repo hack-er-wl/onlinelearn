@@ -61,6 +61,14 @@ public class TeacherController {
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
+    //查询讲师守则
+    @RequestMapping("/query/rule")
+    @ResponseBody
+    public Result queryCourse() {
+        List<Rule> list = postService.getRule();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
     //发布课程
     @RequestMapping("/post/course")
     @ResponseBody

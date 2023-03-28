@@ -7,5 +7,6 @@ import java.util.List;
 @Mapper
 public interface MenuMapper {
     List getMenu(int role);
+    List getMenuAll();
     int insertMenu(Menu menu);
 }

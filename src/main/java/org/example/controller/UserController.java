@@ -457,7 +457,7 @@ public class UserController {
         return result;
     }
     //将系统通知设置为已收到
-    @RequestMapping("/query/notice/set")
+    @RequestMapping("/notice/set")
     @ResponseBody
     public Result userSetNoticeAccept(
             @RequestParam(value = "noticeid") String notice_id,

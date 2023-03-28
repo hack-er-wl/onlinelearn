@@ -25,6 +25,8 @@ public class AdminController {
     @Resource
     private NoticeService noticeService;
     @Resource
+    private MenuService menuService;
+    @Resource
     private SliderService sliderService;
     private Result result;
     //登录
@@ -128,5 +130,22 @@ public class AdminController {
     public Result getSliderAll(){
         List<Slider> list = sliderService.getSliderAll();
         return list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+    }
+    //发布讲师守则
+    @RequestMapping("/post/rule")
+    @ResponseBody
+    public Result postRule(@RequestParam(value = "rulecontent") String rule_content) {
+        Rule rule = new Rule(Utils.getId(),rule_content);
+        int res = postService.insertRule(rule);
+        result = res != 0 ? new Result(rule,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询菜单
+    @RequestMapping("/query/menu")
+    @ResponseBody
+    public Result queryMenu() {
+        List<Menu> list = menuService.getMenuAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
     }
 }

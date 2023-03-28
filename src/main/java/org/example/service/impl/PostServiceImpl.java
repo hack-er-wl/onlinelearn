@@ -1,9 +1,6 @@
 package org.example.service.impl;
 
-import org.example.entity.Bar;
-import org.example.entity.Chapter;
-import org.example.entity.Course;
-import org.example.entity.User;
+import org.example.entity.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,4 +10,6 @@ public interface PostServiceImpl {
     int postCourse(Course course);
     int postChapter(Chapter chapter);
     int postBar(Bar bar);
+    int insertRule(Rule rule);
+    List getRule();
 }

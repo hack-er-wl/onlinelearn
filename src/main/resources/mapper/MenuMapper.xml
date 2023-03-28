@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.MenuMapper">
+    <!-- 根据用户角色查询菜单 -->
+    <select id="getMenu" parameterType="java.lang.Integer" resultType="org.example.entity.Menu">
+        select * from menus where role=#{role}
+    </select>
+    <!-- 插入一个菜单 -->
+    <insert id="insertMenu" parameterType="org.example.entity.Menu">
+        insert into menus(menu_id,menu_name,menu_path,role) values (#{menu_id},#{menu_name},#{menu_path},#{role})
+    </insert>
+</mapper>

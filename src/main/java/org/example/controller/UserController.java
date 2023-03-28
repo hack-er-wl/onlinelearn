@@ -33,6 +33,8 @@ public class UserController {
     @Resource
     private NoticeService noticeService;
     @Resource
+    private TestService testService;
+    @Resource
     private HttpServletResponse response;
 
     //发送邮件
@@ -482,6 +484,30 @@ public class UserController {
             res.add(map);
         }
         result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //通过courseid查询所有的测试
+    @RequestMapping("/query/test")
+    @ResponseBody
+    public Result queryTestByCourseId(
+            @RequestParam(value = "courseid") String course_id) {
+        List<Test> tests = testService.queryTestByCourseId(course_id);
+        List<Map> list = new ArrayList<>();
+        for (Test test:tests) {
+            Map<String,Object> map = new HashMap<>();
+            List<Choose> chooses = testService.queryChooseByTestId(test.getTest_id());
+            List<Choose> options = testService.queryOptionByTestId(test.getTest_id());
+            map.put("test_id",test.getTest_id());
+            map.put("teach_id",test.getTeach_id());
+            map.put("ques_num",test.getQues_num());
+            map.put("test_time",test.getTest_time());
+            map.put("use_time",test.getUse_time());
+            map.put("course_id",test.getCourse_id());
+            map.put("test_chooses",chooses);
+            map.put("test_options",options);
+            list.add(map);
+        }
+        result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
 }

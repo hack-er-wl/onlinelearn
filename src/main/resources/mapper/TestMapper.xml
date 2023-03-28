@@ -5,8 +5,32 @@
     <select id="queryTestByCourseId" parameterType="java.lang.String" resultType="org.example.entity.Test">
         select * from tests where course_id=#{course_id}
     </select>
+    <!-- 根据测试id查询选择题 -->
+    <select id="queryChooseByTestId" parameterType="java.lang.String" resultType="org.example.entity.Choose">
+        select * from chooses where test_id=#{test_id}
+    </select>
+    <!-- 根据测试id查询判断题 -->
+    <select id="queryOptionByTestId" parameterType="java.lang.String" resultType="org.example.entity.Option">
+        select * from options where test_id=#{test_id}
+    </select>
+    <!-- 根据测试id查询测试 -->
+    <select id="queryTestById" parameterType="java.lang.String" resultType="org.example.entity.Test">
+        select * from tests where test_id=#{test_id}
+    </select>
+    <!-- 更新一个测试 -->
+    <update id="updateTest" parameterType="org.example.entity.Test">
+        update tests set ques_num=#{ques_num} where test_id=#{test_id}
+    </update>
     <!-- 插入一个测试 -->
     <insert id="insertTest" parameterType="org.example.entity.Test">
-        insert into tests(test_id,teach_id,ques_num,test_time,use_time) values (#{test_id},#{teach_id},#{ques_num},#{test_time},#{use_time})
+        insert into tests(test_id,teach_id,ques_num,test_time,use_time,course_id) values (#{test_id},#{teach_id},#{ques_num},#{test_time},#{use_time},#{course_id})
+    </insert>
+    <!-- 插入一个选择题 -->
+    <insert id="insertChoose" parameterType="org.example.entity.Choose">
+        insert into chooses(choose_id,test_id,option_answer,option_contain,option_a,option_b,option_c,option_d) values (#{choose_id},#{test_id},#{option_answer},#{option_contain},#{option_a},#{option_b},#{option_c},#{option_d})
+    </insert>
+    <!-- 插入一个判断题 -->
+    <insert id="insertOption" parameterType="org.example.entity.Option">
+        insert into options(option_id,test_id,option_answer,option_contain) values (#{option_id},#{test_id},#{option_answer},#{option_contain})
     </insert>
 </mapper>

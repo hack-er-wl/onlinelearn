@@ -27,15 +27,24 @@
       <w>fieldid</w>
       <w>fieldname</w>
       <w>hotcourse</w>
+      <w>menuname</w>
+      <w>menupath</w>
       <w>newpass</w>
       <w>noticeid</w>
       <w>oldpass</w>
+      <w>opanswer</w>
+      <w>opcontain</w>
+      <w>optiona</w>
+      <w>optionb</w>
+      <w>optionc</w>
+      <w>optiond</w>
       <w>orderid</w>
       <w>quesnum</w>
       <w>sliderid</w>
       <w>sliderurl</w>
       <w>teachid</w>
       <w>teacid</w>
+      <w>testid</w>
       <w>userage</w>
       <w>userbrief</w>
       <w>usercard</w>

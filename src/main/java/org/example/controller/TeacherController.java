@@ -83,12 +83,55 @@ public class TeacherController {
     public Result postTest(
             @RequestParam(value = "teachid") String teach_id,
             @RequestParam(value = "courseid") String course_id,
-            @RequestParam(value = "quesnum") int ques_num,
             @RequestParam(value = "usetime") int use_time) {
         String test_id = Utils.getId();
-        Test test = new Test(test_id,course_id,teach_id,ques_num,Utils.getTime(),use_time);
+        Test test = new Test(test_id,course_id,teach_id,0,Utils.getTime(),use_time);
         int res = testService.postTest(test);
         result = res == 1 ? new Result(test,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //发布判断题
+    @RequestMapping("/post/option")
+    @ResponseBody
+    public Result postOption(
+            @RequestParam(value = "testid") String test_id,
+            @RequestParam(value = "opanswer") String option_answer,
+            @RequestParam(value = "opcontain") String option_contain) {
+        String option_id = Utils.getId();
+        Option option = new Option(option_id,test_id,option_answer,option_contain);
+        int res = testService.postOption(option);
+        if(res == 1){
+            Test test = testService.queryTestById(test_id);
+            test.setQues_num(test.getQues_num()+1);
+            int t_res = testService.updateTest(test);
+            result = t_res == 1 ? new Result(option,"操作成功",200):new Result(option,"更新数据失败",404);
+        }else{
+            result = new Result("","操作失败",404);
+        }
+        return result;
+    }
+    //发布选择题
+    @RequestMapping("/post/choose")
+    @ResponseBody
+    public Result postChoose(
+            @RequestParam(value = "testid") String test_id,
+            @RequestParam(value = "opanswer") String option_answer,
+            @RequestParam(value = "opcontain") String option_contain,
+            @RequestParam(value = "optiona") String option_a,
+            @RequestParam(value = "optionb") String option_b,
+            @RequestParam(value = "optionc") String option_c,
+            @RequestParam(value = "optiond") String option_d) {
+        String choose_id = Utils.getId();
+        Choose choose = new Choose(choose_id,test_id,option_answer,option_contain,option_a,option_b,option_c,option_d);
+        int res = testService.postChoose(choose);
+        if(res == 1){
+            Test test = testService.queryTestById(test_id);
+            test.setQues_num(test.getQues_num()+1);
+            int t_res = testService.updateTest(test);
+            result = t_res == 1 ? new Result(choose,"操作成功",200):new Result(choose,"更新数据失败",404);
+        }else{
+            result = new Result("","操作失败",404);
+        }
         return result;
     }
     //发布课程章节

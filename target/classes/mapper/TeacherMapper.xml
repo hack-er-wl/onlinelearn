@@ -17,4 +17,12 @@
     <insert id="insertTeacher" parameterType="org.example.entity.Teacher">
         insert into teachers(teach_id,user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief) values (#{teach_id},#{user_id},#{user_tel},#{teach_field},#{teach_class},#{user_sex},#{user_age},#{user_tage},#{user_brief})
     </insert>
+    <!-- 插入一个讲师守则 -->
+    <insert id="insertRule" parameterType="org.example.entity.Rule">
+        insert into rules(rule_id,rule_content) values (#{rule_id},#{rule_content})
+    </insert>
+    <!-- 查询讲师守则 -->
+    <select id="getRule" resultType="org.example.entity.Rule">
+        select * from rules
+    </select>
 </mapper>

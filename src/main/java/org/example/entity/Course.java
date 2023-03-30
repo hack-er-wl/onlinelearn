@@ -13,7 +13,8 @@ public class Course {
     private String course_brief;
     private int subscribe_num;
     private String course_cover;
-    public Course(String course_id,String class_id,String teach_id,int course_status,int course_fee,String course_name,String course_brief,int subscribe_num,String course_cover){
+    private int course_check;
+    public Course(String course_id,String class_id,String teach_id,int course_status,int course_fee,String course_name,String course_brief,int subscribe_num,String course_cover,int course_check){
         this.course_id = course_id;
         this.class_id = class_id;
         this.teach_id = teach_id;
@@ -23,5 +24,6 @@ public class Course {
         this.course_brief = course_brief;
         this.subscribe_num = subscribe_num;
         this.course_cover = course_cover;
+        this.course_check = course_check;
     }
 }

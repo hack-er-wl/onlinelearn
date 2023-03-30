@@ -27,7 +27,7 @@
     </update>
     <!-- 插入一个用户 -->
     <insert id="insertUser" parameterType="org.example.entity.User">
-        insert into users(user_id,user_name,e_mail,user_pass,user_like,user_add,user_head) values (#{user_id},#{user_name},#{e_mail},#{user_pass},#{user_like},#{user_add},#{user_head})
+        insert into users(user_id,user_name,e_mail,user_pass,user_like,user_add,user_head,user_money) values (#{user_id},#{user_name},#{e_mail},#{user_pass},#{user_like},#{user_add},#{user_head},#{user_money})
     </insert>
     <!-- 插入一个轮播图 -->
     <insert id="insertSlider" parameterType="org.example.entity.Slider">

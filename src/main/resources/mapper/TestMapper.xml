@@ -27,10 +27,10 @@
     </insert>
     <!-- 插入一个选择题 -->
     <insert id="insertChoose" parameterType="org.example.entity.Choose">
-        insert into chooses(choose_id,test_id,option_answer,option_contain,option_a,option_b,option_c,option_d) values (#{choose_id},#{test_id},#{option_answer},#{option_contain},#{option_a},#{option_b},#{option_c},#{option_d})
+        insert into chooses(choose_id,test_id,option_key,option_answer,option_contain,option_a,option_b,option_c,option_d) values (#{choose_id},#{test_id},#{option_key},#{option_answer},#{option_contain},#{option_a},#{option_b},#{option_c},#{option_d})
     </insert>
     <!-- 插入一个判断题 -->
     <insert id="insertOption" parameterType="org.example.entity.Option">
-        insert into options(option_id,test_id,option_answer,option_contain) values (#{option_id},#{test_id},#{option_answer},#{option_contain})
+        insert into options(option_id,test_id,option_key,option_answer,option_contain) values (#{option_id},#{test_id},#{option_key},#{option_answer},#{option_contain})
     </insert>
 </mapper>

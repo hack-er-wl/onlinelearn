@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,24 @@ public class TeacherController {
     @ResponseBody
     public Result queryCourse(@RequestParam(value = "teachid") String teach_id) {
         List<Course> list = courseService.queryCourseTeacherPost(teach_id);
-        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        List<Course> checked = new ArrayList<>();
+        List<Course> checking = new ArrayList<>();
+        List<Course> uncheck = new ArrayList<>();
+        Map<String,List> map = new HashMap<>();
+        for (Course course:list) {
+            switch (course.getCourse_check()){
+                case 0:
+                    checking.add(course);break;
+                case 1:
+                    checked.add(course);break;
+                case 2:
+                    uncheck.add(course);break;
+            }
+        }
+        map.put("checked",checked);
+        map.put("checking",checking);
+        map.put("uncheck",uncheck);
+        result = map.size() != 0 ? new Result(map,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
     //查询讲师守则
@@ -80,7 +98,7 @@ public class TeacherController {
             @RequestParam(value = "coursebrief") String course_brief) {
         String course_id = Utils.getId();
         String course_cover = "http://localhost:8080/static/"+course_id+".png";
-        Course course = new Course(course_id,class_id,teach_id,0,course_fee,course_name,course_brief,0,course_cover);
+        Course course = new Course(course_id,class_id,teach_id,0,course_fee,course_name,course_brief,0,course_cover,0);
         int res = postService.postCourse(course);
         result = res == 1 ? new Result(course,"操作成功",200):new Result("","操作失败",404);
         return result;
@@ -103,10 +121,11 @@ public class TeacherController {
     @ResponseBody
     public Result postOption(
             @RequestParam(value = "testid") String test_id,
+            @RequestParam(value = "opkey") int option_key,
             @RequestParam(value = "opanswer") String option_answer,
             @RequestParam(value = "opcontain") String option_contain) {
         String option_id = Utils.getId();
-        Option option = new Option(option_id,test_id,option_answer,option_contain);
+        Option option = new Option(option_id,test_id,option_key,option_answer,option_contain);
         int res = testService.postOption(option);
         if(res == 1){
             Test test = testService.queryTestById(test_id);
@@ -123,6 +142,7 @@ public class TeacherController {
     @ResponseBody
     public Result postChoose(
             @RequestParam(value = "testid") String test_id,
+            @RequestParam(value = "opkey") int option_key,
             @RequestParam(value = "opanswer") String option_answer,
             @RequestParam(value = "opcontain") String option_contain,
             @RequestParam(value = "optiona") String option_a,
@@ -130,7 +150,7 @@ public class TeacherController {
             @RequestParam(value = "optionc") String option_c,
             @RequestParam(value = "optiond") String option_d) {
         String choose_id = Utils.getId();
-        Choose choose = new Choose(choose_id,test_id,option_answer,option_contain,option_a,option_b,option_c,option_d);
+        Choose choose = new Choose(choose_id,test_id,option_key,option_answer,option_contain,option_a,option_b,option_c,option_d);
         int res = testService.postChoose(choose);
         if(res == 1){
             Test test = testService.queryTestById(test_id);

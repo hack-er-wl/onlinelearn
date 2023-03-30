@@ -11,8 +11,9 @@ public class User {
     private String user_like;//兴趣
     private String user_add;//地址
     private String user_head;//头像
+    private int user_money;//余额
 
-    public User(String user_id, String user_name, String e_mail, String user_pass, String user_like, String user_add, String user_head) {
+    public User(String user_id, String user_name, String e_mail, String user_pass, String user_like, String user_add, String user_head,int user_money) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.e_mail = e_mail;
@@ -20,5 +21,6 @@ public class User {
         this.user_like = user_like;
         this.user_add = user_add;
         this.user_head = user_head;
+        this.user_money = user_money;
     }
 }

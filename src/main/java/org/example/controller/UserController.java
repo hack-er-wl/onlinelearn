@@ -52,7 +52,7 @@ public class UserController {
             @RequestParam(value = "password") String password,
             @RequestParam(value = "email") String email,
             @RequestParam(value = "code") String code) {
-        User user = new User(Utils.getId(),username,email,password,"","","");
+        User user = new User(Utils.getId(),username,email,password,"","","",0);
         return result.getData().toString().equals(code)?(int)registerService.registUser(user) == 1? new Result("","操作成功",200):new Result("","操作失败",404):new Result("","验证码错误",500);
     }
     //登录

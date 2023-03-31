@@ -143,7 +143,7 @@ public class AdminController {
         result = res != 0 ? new Result(rule,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
-    //查询菜单
+    //查询所有菜单
     @RequestMapping("/query/menu")
     @ResponseBody
     public Result queryMenu() {
@@ -151,11 +151,27 @@ public class AdminController {
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
-    //查询菜单
+    //查询所有测试
     @RequestMapping("/query/test")
     @ResponseBody
     public Result queryTest() {
         List<Test> list = testService.queryTestAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询所有选择
+    @RequestMapping("/query/choose")
+    @ResponseBody
+    public Result queryChoose() {
+        List<Test> list = testService.queryChooseAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询所有判断
+    @RequestMapping("/query/option")
+    @ResponseBody
+    public Result queryOption() {
+        List<Test> list = testService.queryOptionAll();
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }

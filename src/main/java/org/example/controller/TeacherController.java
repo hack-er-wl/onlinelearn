@@ -3,10 +3,7 @@ package org.example.controller;
 import org.example.common.Result;
 import org.example.common.Utils;
 import org.example.entity.*;
-import org.example.service.ApplyService;
-import org.example.service.CourseService;
-import org.example.service.PostService;
-import org.example.service.TestService;
+import org.example.service.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +24,8 @@ public class TeacherController {
     private CourseService courseService;
     @Resource
     private ApplyService applyService;
+    @Resource
+    private SubscribeService subscribeService;
     @Resource
     private TestService testService;
     private Result result;
@@ -188,6 +187,22 @@ public class TeacherController {
         Bar bar = new Bar(bar_id,chapter_id,bar_order,bar_name,bar_url);
         int res = postService.postBar(bar);
         result = res == 1 ? new Result(bar,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //查询该课程的订阅者
+    @RequestMapping("/query/subscriber")
+    @ResponseBody
+    public Result postSubscriber(@RequestParam(value = "courseid") String course_id) {
+        List<User> list = subscribeService.querySubscriber(course_id);
+        List<Map> res = new ArrayList<>();
+        for(User user:list){
+            Map<String,Object> map = new HashMap<>();
+            map.put("user_name",user.getUser_name());
+            map.put("user_like",user.getUser_like());
+            map.put("user_head",user.getUser_head());
+            res.add(map);
+        }
+        result = new Result(res,"操作成功",200);
         return result;
     }
 }

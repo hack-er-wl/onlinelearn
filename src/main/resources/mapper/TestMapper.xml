@@ -13,7 +13,7 @@
     <select id="queryOptionByTestId" parameterType="java.lang.String" resultType="org.example.entity.Option">
         select * from options where test_id=#{test_id}
     </select>
-    <!-- 查询所有测试题 -->
+    <!-- 查询所有测试 -->
     <select id="queryTestAll" resultType="org.example.entity.Test">
         select * from tests
     </select>
@@ -37,4 +37,12 @@
     <insert id="insertOption" parameterType="org.example.entity.Option">
         insert into options(option_id,test_id,option_key,option_answer,option_contain) values (#{option_id},#{test_id},#{option_key},#{option_answer},#{option_contain})
     </insert>
+    <!-- 查询所有选择试题 -->
+    <select id="queryChooseAll" resultType="org.example.entity.Choose">
+        select * from chooses
+    </select>
+    <!-- 查询所有判断题 -->
+    <select id="queryOptionAll" resultType="org.example.entity.Option">
+        select * from options
+    </select>
 </mapper>

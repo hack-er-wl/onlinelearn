@@ -57,4 +57,14 @@ public class TestService implements TestServiceImpl {
     public List queryTestAll() {
         return testMapper.queryTestAll();
     }
+
+    @Override
+    public List queryChooseAll() {
+        return testMapper.queryChooseAll();
+    }
+
+    @Override
+    public List queryOptionAll() {
+        return testMapper.queryOptionAll();
+    }
 }

@@ -25,6 +25,10 @@
     <select id="queryCollectCourseByUid" parameterType="java.lang.String" resultType="org.example.entity.CollectInfo">
         select * from collect where user_id=#{user_id}
     </select>
+    <!-- 根据课程id查询订阅者 -->
+    <select id="querySubscriber" parameterType="java.lang.String" resultType="org.example.entity.User">
+        select * from users where user_id in (select user_id from subscribe where course_id=#{course_id})
+    </select>
     <!-- 根据用户id查询订单信息 -->
     <select id="queryOrder" parameterType="java.lang.String" resultType="org.example.entity.Order">
         select * from orders where user_id=#{user_id}

@@ -3,7 +3,7 @@ package org.example.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.example.common.ApplicationHelper;
+import org.example.common.SocketHelper;
 import org.example.common.Utils;
 import org.example.entity.GetNoticeInfo;
 import org.example.entity.Notice;
@@ -23,8 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/websocket/{username}")
 /*实时通信服务*/
 public class SocketService {
-    private NoticeService noticeService = (NoticeService) ApplicationHelper.getBean("noticeService");
-    private  LoginService loginService = (LoginService) ApplicationHelper.getBean("loginService");
+    private NoticeService noticeService = (NoticeService) SocketHelper.getBean("noticeService");
+    private  LoginService loginService = (LoginService) SocketHelper.getBean("loginService");
     //以用户的姓名为key，WebSocket为对象保存起来
     private static Map<String, SocketService> clients = new ConcurrentHashMap<>();
     //用来存在线连接数

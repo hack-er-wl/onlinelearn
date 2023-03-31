@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 @RestController
@@ -27,7 +28,11 @@ public class AdminController {
     @Resource
     private MenuService menuService;
     @Resource
+    private TestService testService;
+    @Resource
     private SliderService sliderService;
+    @Resource
+    private HttpServletResponse response;
     private Result result;
     //登录
     @RequestMapping("/login")
@@ -36,7 +41,20 @@ public class AdminController {
             @RequestParam(value = "email") String email,
             @RequestParam(value = "password") String password) {
         User user = loginService.login(email);
-        result =  user.getUser_pass().equals(password) ? new Result(user,"登录成功",200):new Result("","邮箱或密码错误",404);
+        if(user.getUser_pass().equals(password)) {
+            if(user.getUser_role() == 0){
+                //获取token
+                Map<String, String> payload = new HashMap<>();
+                payload.put("userid", user.getUser_id());
+                String token = Utils.getToken(payload);
+                response.addHeader("token", token);
+                result =  new Result(user,"登录成功",200);
+            }else{
+                result =  new Result("","无权限访问！",404);
+            }
+        }else{
+            result = new Result("","邮箱或密码错误",404);
+        }
         return result;
     }
     @RequestMapping("/query/user")
@@ -130,6 +148,14 @@ public class AdminController {
     @ResponseBody
     public Result queryMenu() {
         List<Menu> list = menuService.getMenuAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询菜单
+    @RequestMapping("/query/test")
+    @ResponseBody
+    public Result queryTest() {
+        List<Test> list = testService.queryTestAll();
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }

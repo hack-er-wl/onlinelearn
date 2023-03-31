@@ -109,9 +109,10 @@ public class TeacherController {
     public Result postTest(
             @RequestParam(value = "teachid") String teach_id,
             @RequestParam(value = "courseid") String course_id,
+            @RequestParam(value = "testname") String test_name,
             @RequestParam(value = "usetime") int use_time) {
         String test_id = Utils.getId();
-        Test test = new Test(test_id,course_id,teach_id,0,Utils.getTime(),use_time);
+        Test test = new Test(test_id,course_id,teach_id,test_name,0,Utils.getTime(),use_time);
         int res = testService.postTest(test);
         result = res == 1 ? new Result(test,"操作成功",200):new Result("","操作失败",404);
         return result;

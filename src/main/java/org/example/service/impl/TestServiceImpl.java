@@ -17,4 +17,5 @@ public interface TestServiceImpl {
     List queryTestByCourseId(String course_id);
     List queryChooseByTestId(String test_id);
     List queryOptionByTestId(String test_id);
+    List queryTestAll();
 }

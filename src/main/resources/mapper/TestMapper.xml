@@ -13,6 +13,10 @@
     <select id="queryOptionByTestId" parameterType="java.lang.String" resultType="org.example.entity.Option">
         select * from options where test_id=#{test_id}
     </select>
+    <!-- 查询所有测试题 -->
+    <select id="queryTestAll" resultType="org.example.entity.Test">
+        select * from tests
+    </select>
     <!-- 根据测试id查询测试 -->
     <select id="queryTestById" parameterType="java.lang.String" resultType="org.example.entity.Test">
         select * from tests where test_id=#{test_id}
@@ -23,7 +27,7 @@
     </update>
     <!-- 插入一个测试 -->
     <insert id="insertTest" parameterType="org.example.entity.Test">
-        insert into tests(test_id,teach_id,ques_num,test_time,use_time,course_id) values (#{test_id},#{teach_id},#{ques_num},#{test_time},#{use_time},#{course_id})
+        insert into tests(test_id,course_id,teach_id,test_name,ques_num,test_time,use_time) values (#{test_id},#{course_id},#{teach_id},#{test_name},#{ques_num},#{test_time},#{use_time})
     </insert>
     <!-- 插入一个选择题 -->
     <insert id="insertChoose" parameterType="org.example.entity.Choose">

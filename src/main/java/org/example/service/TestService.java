@@ -52,4 +52,9 @@ public class TestService implements TestServiceImpl {
     public List queryOptionByTestId(String test_id) {
         return testMapper.queryOptionByTestId(test_id);
     }
+
+    @Override
+    public List queryTestAll() {
+        return testMapper.queryTestAll();
+    }
 }

@@ -52,7 +52,7 @@ public class UserController {
             @RequestParam(value = "password") String password,
             @RequestParam(value = "email") String email,
             @RequestParam(value = "code") String code) {
-        User user = new User(Utils.getId(),username,email,password,"","","",0);
+        User user = new User(Utils.getId(),username,email,password,"","","",0,1);
         return result.getData().toString().equals(code)?(int)registerService.registUser(user) == 1? new Result("","操作成功",200):new Result("","操作失败",404):new Result("","验证码错误",500);
     }
     //登录
@@ -61,8 +61,7 @@ public class UserController {
     public Result login(@RequestParam(value = "email") String email,
                       @RequestParam(value = "password") String password) {
         User user = loginService.login(email);
-        boolean bool = user.getUser_pass().equals(password);
-        if(bool) {
+        if(user.getUser_pass().equals(password)) {
             //获取token
             Map<String, String> payload = new HashMap<>();
             payload.put("userid", user.getUser_id());
@@ -503,6 +502,7 @@ public class UserController {
             map.put("test_time",test.getTest_time());
             map.put("use_time",test.getUse_time());
             map.put("course_id",test.getCourse_id());
+            map.put("test_name",test.getTest_name());
             map.put("test_chooses",chooses);
             map.put("test_options",options);
             list.add(map);

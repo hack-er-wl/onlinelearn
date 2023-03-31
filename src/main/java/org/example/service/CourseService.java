@@ -122,4 +122,5 @@ public class CourseService implements CourseServiceImpl {
     public List queryCourseTeacherPost(String teach_id) {
         return teacherMapper.queryCourse(teach_id);
     }
+
 }

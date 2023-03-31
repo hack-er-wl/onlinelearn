@@ -27,15 +27,9 @@ public class MenuController {
     private Result result;
     @RequestMapping("/query")
     @ResponseBody
-    public Result queryMenu(@RequestParam(value = "userid") String user_id) {
-        Teacher teacher = applyService.checkTeacher(user_id);
-        List<Menu> list = new ArrayList<>();
-        list.addAll(menuService.getMenu(0));
-        if(teacher != null){
-            list.addAll(menuService.getMenu(2));
-        }else{
-            list.addAll(menuService.getMenu(1));
-        }
+    public Result queryMenu(@RequestParam(value = "role") int user_role) {
+        List<Menu> list = menuService.getMenu(0);
+         list.addAll(menuService.getMenu(user_role));
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }

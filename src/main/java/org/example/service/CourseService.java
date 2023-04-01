@@ -123,4 +123,19 @@ public class CourseService implements CourseServiceImpl {
         return teacherMapper.queryCourse(teach_id);
     }
 
+    @Override
+    public List queryChapterAll() {
+        return courseMapper.queryChapterAll();
+    }
+
+    @Override
+    public List queryBarAll() {
+        return courseMapper.queryBarAll();
+    }
+
+    @Override
+    public Course queryCourseById(String course_id) {
+        return courseMapper.queryCourseById(course_id);
+    }
+
 }

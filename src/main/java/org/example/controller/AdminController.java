@@ -3,7 +3,6 @@ package org.example.controller;
 import org.example.common.Result;
 import org.example.common.Utils;
 import org.example.entity.*;
-import org.example.mapper.NoticeMapper;
 import org.example.service.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +29,7 @@ public class AdminController {
     @Resource
     private TestService testService;
     @Resource
-    private SliderService sliderService;
+    private ResourceService resourceService;
     @Resource
     private HttpServletResponse response;
     private Result result;
@@ -124,14 +123,14 @@ public class AdminController {
             @RequestParam(value = "sliderid") String slider_id,
             @RequestParam(value = "sliderurl") String slider_url){
         Slider slider = new Slider(slider_id,slider_url);
-        int res = sliderService.insertSlider(slider);
+        int res = resourceService.insertSlider(slider);
         return res == 1 ? new Result(slider,"操作成功",200):new Result("","操作失败",404);
     }
     //插入轮播图
     @RequestMapping("/query/slider")
     @ResponseBody
     public Result getSliderAll(){
-        List<Slider> list = sliderService.getSliderAll();
+        List<Slider> list = resourceService.getSliderAll();
         return list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",404);
     }
     //发布讲师守则
@@ -172,6 +171,30 @@ public class AdminController {
     @ResponseBody
     public Result queryOption() {
         List<Test> list = testService.queryOptionAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询所有判断
+    @RequestMapping("/query/chapter")
+    @ResponseBody
+    public Result queryChapter() {
+        List<Test> list = courseService.queryChapterAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询所有判断
+    @RequestMapping("/query/bar")
+    @ResponseBody
+    public Result queryBar() {
+        List<Test> list = courseService.queryBarAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询所有判断
+    @RequestMapping("/query/avatar")
+    @ResponseBody
+    public Result queryAvatar() {
+        List<Test> list = resourceService.getAvatarAll();
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }

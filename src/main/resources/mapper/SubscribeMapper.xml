@@ -9,13 +9,13 @@
     <insert id="collectCourse" parameterType="java.lang.String">
         insert into collect(user_id,course_id) values (#{user_id},#{course_id})
     </insert>
-    <!-- 插入一个订单信息 -->
-    <insert id="insertOrder" parameterType="org.example.entity.Order">
-        insert into orders(order_id,order_title,order_fee,create_time,pay_time,pay_status) values (#{order_id},#{order_title},#{order_fee},#{create_time},#{pay_time},#{pay_status})
-    </insert>
     <!-- 根据用户id和课程id查询订阅信息 -->
     <select id="querySubscribeCourse" parameterType="java.lang.String" resultType="org.example.entity.SubscribeInfo">
         select * from subscribe where user_id=#{user_id} and course_id=#{course_id}
+    </select>
+    <!-- 根据用户id和课程id查询所有订阅信息 -->
+    <select id="querySubscribeCourseAll" parameterType="java.lang.String" resultType="org.example.entity.SubscribeInfo">
+        select * from subscribe where user_id=#{user_id}
     </select>
     <!-- 根据用户id和课程id查询收藏信息 -->
     <select id="queryCollectCourse" parameterType="java.lang.String" resultType="org.example.entity.CollectInfo">
@@ -29,10 +29,6 @@
     <select id="querySubscriber" parameterType="java.lang.String" resultType="org.example.entity.User">
         select * from users where user_id in (select user_id from subscribe where course_id=#{course_id})
     </select>
-    <!-- 根据用户id查询订单信息 -->
-    <select id="queryOrder" parameterType="java.lang.String" resultType="org.example.entity.Order">
-        select * from orders where user_id=#{user_id}
-    </select>
     <!-- 删除一个订阅信息 -->
     <delete id="cancelSubscribeCourse" parameterType="java.lang.String">
         delete from subscribe where user_id = #{user_id} and course_id = #{course_id}
@@ -40,9 +36,5 @@
     <!-- 删除一个收藏信息 -->
     <delete id="cancelCollectCourse" parameterType="java.lang.String">
         delete from collect where user_id = #{user_id} and course_id = #{course_id}
-    </delete>
-    <!-- 删除一个订单信息 -->
-    <delete id="cancelOrder" parameterType="java.lang.String">
-        delete from orders where order_id = #{order_id}
     </delete>
 </mapper>

@@ -25,19 +25,6 @@ public class SubscribeService implements SubscribeServiceImpl {
     }
 
     @Override
-    public int insertOrder(Order order) {
-        return subscribeMapper.insertOrder(order);
-    }
-
-    @Override
-    public int cancelOrder(String order_id) {return subscribeMapper.cancelOrder(order_id);}
-
-    @Override
-    public List queryOrder(String user_id) {
-        return subscribeMapper.queryOrder(user_id);
-    }
-
-    @Override
     public SubscribeInfo querySubscribeCourse(String user_id, String course_id) {
         return subscribeMapper.querySubscribeCourse(user_id,course_id);
     }
@@ -65,5 +52,10 @@ public class SubscribeService implements SubscribeServiceImpl {
     @Override
     public List querySubscriber(String course_id) {
         return subscribeMapper.querySubscriber(course_id);
+    }
+
+    @Override
+    public List querySubscribeCourseAll(String user_id) {
+        return subscribeMapper.querySubscribeCourseAll(user_id);
     }
 }

@@ -1,7 +1,7 @@
 package org.example.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.example.entity.Slider;
+import org.example.entity.PointerInfo;
 import org.example.entity.User;
 
 import java.util.List;
@@ -13,9 +13,6 @@ public interface UserMapper {
     List getUserAll();
     List getTeacherAll();
     int insertUser(User user);
-    int insertSlider(Slider slider);
-    List getSlider(int start, int end);
-    List getSliderAll();
     int updateUser(User user);
     int updateUserPass(User user);
 }

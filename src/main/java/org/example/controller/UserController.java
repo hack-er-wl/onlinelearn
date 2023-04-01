@@ -25,7 +25,7 @@ public class UserController {
     @Resource
     private ApplyService applyService;
     @Resource
-    private SliderService sliderService;
+    private ResourceService resourceService;
     @Resource
     private SubscribeService subscribeService;
     @Resource
@@ -34,6 +34,8 @@ public class UserController {
     private NoticeService noticeService;
     @Resource
     private TestService testService;
+    @Resource
+    private OrderService orderService;
     @Resource
     private HttpServletResponse response;
 
@@ -154,7 +156,7 @@ public class UserController {
     public Result getSlider(
             @RequestParam(value = "start") int start,
             @RequestParam(value = "end") int end){
-        Object obj = sliderService.getSlider(start,end);
+        Object obj = resourceService.getSlider(start,end);
         result = obj != null ? new Result(obj,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
@@ -227,16 +229,16 @@ public class UserController {
         Course course = courseService.getCourseByCourseId(course_id);
         course.setSubscribe_num(course.getSubscribe_num()+1);
         //生成订单
-        Order order = new Order(order_id,course.getCourse_name(),course.getCourse_fee(),Utils.getTime(),null,0);
+        Order order = new Order(order_id,course.getCourse_name(),course.getCourse_fee(),Utils.getTime(),null,0,"微信");
         //插入订单和订阅信息
-        int orderRes = subscribeService.insertOrder(order);
+        int orderRes = orderService.insertOrder(order);
         if(orderRes == 1){
             int subRes = subscribeService.subscribeCourse(user_id,course_id,order_id);
             int subNum = courseService.updateCourseSubNum(course);
             if(subRes == 1 && subNum == 1){
                 result = new Result(order,"操作成功",200);
             }else{
-                subscribeService.cancelOrder(order_id);//订阅失败删除订单消息
+                orderService.cancelOrder(order_id);//订阅失败删除订单消息
                 result = new Result("","操作失败",404);
             }
         }else{
@@ -254,6 +256,19 @@ public class UserController {
         result = info != null ? new Result(info,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
+    //查询订阅课程
+    @RequestMapping("/query/subscribe/course")
+    @ResponseBody
+    public Result querySubscribeCourse(@RequestParam(value = "userid") String user_id) {
+        List<SubscribeInfo> list = subscribeService.querySubscribeCourseAll(user_id);
+        List<Course> res = new ArrayList<>();
+        for(SubscribeInfo subscribeInfo:list){
+            Course course = courseService.queryCourseById(subscribeInfo.getCourse_id());
+            res.add(course);
+        }
+        result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
     //取消订阅信息
     @RequestMapping("/cancel/subscribe")
     @ResponseBody
@@ -265,7 +280,7 @@ public class UserController {
         course.setSubscribe_num(course.getSubscribe_num() - 1);
         int canSubRes = subscribeService.cancelSubscribeCourse(user_id,course_id);
         if(canSubRes == 1){
-            int canOrderRes = subscribeService.cancelOrder(order_id);
+            int canOrderRes = orderService.cancelOrder(order_id);
             int canSubNum = courseService.updateCourseSubNum(course);
             if(canOrderRes == 1 && canSubNum == 1){
                 result = new Result(canOrderRes,"操作成功",200);
@@ -285,6 +300,29 @@ public class UserController {
             @RequestParam(value = "courseid") String course_id) {
         int res = subscribeService.collectCourse(user_id,course_id);
         result = res == 1 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //查询订单
+    @RequestMapping("/query/order")
+    @ResponseBody
+    public Result queryOrder(@RequestParam(value = "userid") String user_id) {
+        List<SubscribeInfo> subscribeInfos = subscribeService.querySubscribeCourseAll(user_id);
+        List<Map> list = new ArrayList<>();
+        for(SubscribeInfo subscribeInfo:subscribeInfos){
+            Map<String,Object> map = new HashMap<>();
+            Course courses = courseService.queryCourseById(subscribeInfo.getCourse_id());
+            Order order = orderService.queryOrder(subscribeInfo.getOrder_id());
+            map.put("order_head",courses.getCourse_cover());
+            map.put("order_id",order.getOrder_id());
+            map.put("order_title",order.getOrder_title());
+            map.put("order_fee",order.getOrder_fee());
+            map.put("create_time",order.getCreate_time());
+            map.put("pay_time",order.getPay_time());
+            map.put("pay_status",order.getPay_status());
+            map.put("pay_way",order.getPay_way());
+            list.add(map);
+        }
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
     //查询收藏课程
@@ -508,6 +546,86 @@ public class UserController {
             list.add(map);
         }
         result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //点赞评论
+    @RequestMapping("/point/assess")
+    @ResponseBody
+    public Result userPointAssess(
+            @RequestParam(value = "userid") String user_id,
+            @RequestParam(value = "assessid") String assess_id){
+        PointerInfo pointerInfo = new PointerInfo(user_id,assess_id);
+        int res = assessService.pointAssess(pointerInfo);
+        if(res == 1){
+            Assess assess = assessService.queryAssessById(assess_id);
+            assess.setAssess_pointer(assess.getAssess_pointer()+1);
+            int res_up = assessService.updateAssessPointerNum(assess);
+            result = res_up == 1 ? new Result(res_up,"操作成功",200):new Result(res_up,"更新数据失败",404);
+        }else{
+            result = new Result(res,"操作失败",404);
+        }
+        return result;
+    }
+    //点赞评论
+    @RequestMapping("/point/reply")
+    @ResponseBody
+    public Result userPointReply(
+            @RequestParam(value = "userid") String user_id,
+            @RequestParam(value = "replyid") String reply_id){
+        PointerInfo pointerInfo = new PointerInfo(user_id,reply_id);
+        int res = assessService.pointReply(pointerInfo);
+        if(res == 1){
+            Reply reply = assessService.queryReplyById(reply_id);
+            reply.setReply_pointer(reply.getReply_pointer()+1);
+            int rep_up = assessService.updateReplyPointerNum(reply);
+            result = rep_up == 1 ? new Result(rep_up,"操作成功",200):new Result(rep_up,"更新数据失败",404);
+        }else{
+            result = new Result(res,"操作失败",404);
+        }
+        return result;
+    }
+    //根据id查询是否点赞过评论
+    @RequestMapping("/query/assess/point")
+    @ResponseBody
+    public Result queryAssessPointerById(
+            @RequestParam(value = "assessid") String assess_id,
+            @RequestParam(value = "userid") String user_id) {
+        PointerInfo pointerInfo = new PointerInfo(user_id,assess_id);
+        PointerInfo res = assessService.queryAssessPoint(pointerInfo);
+        result = new Result(res,"操作成功",200);
+        return result;
+    }
+    //取消点赞评论
+    @RequestMapping("/cancel/assess/point")
+    @ResponseBody
+    public Result cancelAssessPointerById(
+            @RequestParam(value = "assessid") String assess_id,
+            @RequestParam(value = "userid") String user_id) {
+        PointerInfo pointerInfo = new PointerInfo(user_id,assess_id);
+        int res = assessService.assessPointCancel(pointerInfo);
+        result = res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //根据id查询是否点赞过评论回复
+    @RequestMapping("/query/reply/point")
+    @ResponseBody
+    public Result queryReplyPointerById(
+            @RequestParam(value = "replyid") String reply_id,
+            @RequestParam(value = "userid") String user_id) {
+        PointerInfo pointerInfo = new PointerInfo(user_id,reply_id);
+        PointerInfo res = assessService.queryReplyPoint(pointerInfo);
+        result = new Result(res,"操作成功",200);
+        return result;
+    }
+    //取消点赞回复
+    @RequestMapping("/cancel/reply/point")
+    @ResponseBody
+    public Result cancelReplyPointerById(
+            @RequestParam(value = "replyid") String reply_id,
+            @RequestParam(value = "userid") String user_id) {
+        PointerInfo pointerInfo = new PointerInfo(user_id,reply_id);
+        int res = assessService.replyPointCancel(pointerInfo);
+        result = res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
 }

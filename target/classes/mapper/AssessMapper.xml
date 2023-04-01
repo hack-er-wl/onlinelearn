@@ -25,4 +25,44 @@
     <delete id="cancelReply" parameterType="java.lang.String">
         delete from replies where user_id = #{user_id} and reply_id = #{reply_id}
     </delete>
+    <!-- 根据id查询点赞评论(是否点赞) -->
+    <select id="queryAssessPoint" parameterType="org.example.entity.PointerInfo" resultType="org.example.entity.PointerInfo">
+        select * from point_assess where assess_id=#{point_id} and user_id=#{user_id}
+    </select>
+    <!-- 取消点赞评论 -->
+    <delete id="assessPointCancel" parameterType="org.example.entity.PointerInfo">
+        delete from point_assess where assess_id=#{point_id} and user_id=#{user_id}
+    </delete>
+    <!-- 插入一个点赞评论信息 -->
+    <insert id="pointAssess" parameterType="org.example.entity.PointerInfo">
+        insert into point_assess(user_id,assess_id) values (#{user_id},#{point_id})
+    </insert>
+    <!-- 根据id查询点赞回复(是否点赞) -->
+    <select id="queryReplyPoint" parameterType="org.example.entity.PointerInfo" resultType="org.example.entity.PointerInfo">
+        select * from point_reply where reply_id=#{point_id} and user_id=#{user_id}
+    </select>
+    <!-- 取消点赞回复 -->
+    <delete id="replyPointCancel" parameterType="org.example.entity.PointerInfo">
+        delete from point_reply where reply_id=#{point_id} and user_id=#{user_id}
+    </delete>
+    <!-- 插入一个点赞回复信息 -->
+    <insert id="pointReply" parameterType="org.example.entity.PointerInfo">
+        insert into point_reply(user_id,reply_id) values (#{user_id},#{point_id})
+    </insert>
+    <!-- 更新一个评论 -->
+    <update id="updateAssessPointerNum" parameterType="org.example.entity.Assess">
+        update assesses set assess_pointer=#{assess_pointer} where assess_id=#{assess_id}
+    </update>
+    <!-- 更新一个回复 -->
+    <update id="updateReplyPointerNum" parameterType="org.example.entity.Reply">
+        update replies set reply_pointer=#{reply_pointer} where reply_id=#{reply_id}
+    </update>
+    <!-- 根据id查询一个点赞 -->
+    <select id="queryAssessById" parameterType="java.lang.String" resultType="org.example.entity.Assess">
+        select * from assesses  where assess_id=#{assess_id}
+    </select>
+    <!-- 根据id查询一个回复 -->
+    <select id="queryReplyById" parameterType="java.lang.String" resultType="org.example.entity.Reply">
+        select * from replies where reply_id=#{reply_id}
+    </select>
 </mapper>

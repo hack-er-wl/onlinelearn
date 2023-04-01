@@ -28,4 +28,7 @@ public interface CourseMapper {
     int insertCourseClass(CClass cClass);
     List queryCourseClass(String field_id);
     List queryCClassByStatus(int status);
+    List queryChapterAll();
+    List queryBarAll();
+    Course queryCourseById(String course_id);
 }

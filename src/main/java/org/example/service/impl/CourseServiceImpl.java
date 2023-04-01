@@ -28,4 +28,7 @@ public interface CourseServiceImpl {
     Teacher getTeacherByCourseId(String course_id);
     User getUserById(String user_id);
     List queryCourseTeacherPost(String teach_id);
+    List queryChapterAll();
+    List queryBarAll();
+    Course queryCourseById(String course_id);
 }

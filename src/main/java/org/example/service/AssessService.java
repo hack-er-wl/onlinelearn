@@ -1,6 +1,7 @@
 package org.example.service;
 
 import org.example.entity.Assess;
+import org.example.entity.PointerInfo;
 import org.example.entity.Reply;
 import org.example.entity.User;
 import org.example.mapper.AssessMapper;
@@ -28,13 +29,13 @@ public class AssessService implements AssessServiceImpl {
     }
 
     @Override
-    public int pointAssess(String user_id, String assess_id) {
-        return assessMapper.pointAssess(user_id,assess_id);
+    public int pointAssess(PointerInfo pointerInfo) {
+        return assessMapper.pointAssess(pointerInfo);
     }
 
     @Override
-    public int pointReply(String user_id, String reply_id) {
-        return assessMapper.pointReply(user_id,reply_id);
+    public int pointReply(PointerInfo pointerInfo) {
+        return assessMapper.pointReply(pointerInfo);
     }
 
     @Override
@@ -68,17 +69,47 @@ public class AssessService implements AssessServiceImpl {
     }
 
     @Override
-    public Object queryAssessPoint(String user_id, String assess_id) {
-        return assessMapper.queryAssessPoint(user_id,assess_id);
+    public PointerInfo queryAssessPoint(PointerInfo pointerInfo) {
+        return assessMapper.queryAssessPoint(pointerInfo);
     }
 
     @Override
-    public Object queryReplyPoint(String user_id, String reply_id) {
-        return assessMapper.queryReplyPoint(user_id,reply_id);
+    public PointerInfo queryReplyPoint(PointerInfo pointerInfo) {
+        return assessMapper.queryReplyPoint(pointerInfo);
+    }
+
+    @Override
+    public int assessPointCancel(PointerInfo pointerInfo) {
+        return assessMapper.assessPointCancel(pointerInfo);
+    }
+
+    @Override
+    public int replyPointCancel(PointerInfo pointerInfo) {
+        return assessMapper.replyPointCancel(pointerInfo);
     }
 
     @Override
     public User queryUserById(String user_id) {
         return userMapper.getUserById(user_id);
+    }
+
+    @Override
+    public int updateAssessPointerNum(Assess assess) {
+        return assessMapper.updateAssessPointerNum(assess);
+    }
+
+    @Override
+    public int updateReplyPointerNum(Reply reply) {
+        return assessMapper.updateReplyPointerNum(reply);
+    }
+
+    @Override
+    public Assess queryAssessById(String assess_id) {
+        return assessMapper.queryAssessById(assess_id);
+    }
+
+    @Override
+    public Reply queryReplyById(String reply_id) {
+        return assessMapper.queryReplyById(reply_id);
     }
 }

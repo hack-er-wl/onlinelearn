@@ -13,7 +13,8 @@ public class Teacher {
     private int user_age;
     private int user_tage;
     private String user_brief;
-    public Teacher(String teach_id,String user_id,String tel,String teach_field,String teach_class,int user_sex,int user_age,int user_tage,String user_brief){
+    private int check_status;
+    public Teacher(String teach_id,String user_id,String tel,String teach_field,String teach_class,int user_sex,int user_age,int user_tage,String user_brief,int check_status){
         this.teach_id = teach_id;
         this.user_id = user_id;
         this.user_tel = tel;
@@ -23,5 +24,6 @@ public class Teacher {
         this.user_age = user_age;
         this.user_tage = user_tage;
         this.user_brief = user_brief;
+        this.check_status = check_status;
     }
 }

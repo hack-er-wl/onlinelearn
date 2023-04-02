@@ -29,6 +29,8 @@ public class AdminController {
     @Resource
     private TestService testService;
     @Resource
+    private UpdateService updateService;
+    @Resource
     private ResourceService resourceService;
     @Resource
     private HttpServletResponse response;
@@ -196,6 +198,18 @@ public class AdminController {
     public Result queryAvatar() {
         List<Test> list = resourceService.getAvatarAll();
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //审核讲师
+    @RequestMapping("/update/teacher/status")
+    @ResponseBody
+    public Result updateCheckStatus(
+            @RequestParam(value = "teachid") String teach_id,
+            @RequestParam(value = "code") int check_status) {
+        Teacher teacher = updateService.queryTeacherById(teach_id);
+        teacher.setCheck_status(check_status);
+        int res = updateService.updateTeacher(teacher);
+        result =  res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
 }

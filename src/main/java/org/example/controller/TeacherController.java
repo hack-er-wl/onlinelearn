@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,10 +97,10 @@ public class TeacherController {
             @RequestParam(value = "teachid") String teach_id,
             @RequestParam(value = "coursefee") int course_fee,
             @RequestParam(value = "coursename") String course_name,
-            @RequestParam(value = "coursebrief") String course_brief) {
-        String course_id = Utils.getId();
-        String course_cover = "http://localhost:8080/static/"+course_id+".png";
-        Course course = new Course(course_id,class_id,teach_id,0,course_fee,course_name,course_brief,0,course_cover,0);
+            @RequestParam(value = "coursebrief") String course_brief,
+            @RequestParam(value = "coursecover") String course_cover) {
+        String course_id = course_cover.substring(29,39);
+        Course course = new Course(course_id,class_id,teach_id,1,course_fee,course_name,course_brief,0,course_cover,0);
         int res = postService.postCourse(course);
         result = res == 1 ? new Result(course,"操作成功",200):new Result("","操作失败",404);
         return result;
@@ -204,5 +207,18 @@ public class TeacherController {
         }
         result = new Result(res,"操作成功",200);
         return result;
+    }
+    //上传图片
+    @RequestMapping("/upload/img")
+    @ResponseBody
+    public String uploadImage(MultipartFile file) {
+        String path = "D:/projects/java/onlineLearn/src/main/resources/static";//本地资源路径
+        String file_name = Utils.getId()+".png";
+        try {
+            file.transferTo(new File(path, file_name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "http://localhost:8080/static/" + file_name;//返回路径
     }
 }

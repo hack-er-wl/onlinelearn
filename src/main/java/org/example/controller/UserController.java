@@ -450,7 +450,7 @@ public class UserController {
             @RequestParam(value = "userage") int user_age,
             @RequestParam(value = "usertage") int user_tage,
             @RequestParam(value = "userbrief") String user_brief){
-        Teacher teacher = new Teacher(Utils.getId(),user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief);
+        Teacher teacher = new Teacher(Utils.getId(),user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief,0);
         Teacher isTeacher = applyService.checkTeacher(user_id);
         if(isTeacher == null){
             int res = applyService.applyForTeacher(teacher);

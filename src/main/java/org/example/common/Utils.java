@@ -4,7 +4,9 @@ import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.example.exception.TokenException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,7 +20,7 @@ public class Utils {
     //token签名
     private static final String secret = "onlinelearn";
     //token 过期时间
-    private static final int expire = 3600;
+    private static final int expire = 1800;
     ///生成一个验证码
     public static StringBuilder getCode(){
         StringBuilder code = new StringBuilder();
@@ -59,16 +61,24 @@ public class Utils {
         return builder.withHeader(header).withExpiresAt(expireDate).sign(Algorithm.HMAC256(secret));
     }
     //验证token信息
-    public static DecodedJWT checkToken(String token){
-        DecodedJWT res = null;
+    public static boolean checkToken(String token){
+        boolean res = false;
         try{
-            res = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+            res = true;
         }catch (SignatureVerificationException e){
-            e.printStackTrace();
+            new TokenException("签名验证失败异常!");
+            res = false;
         }catch (AlgorithmMismatchException e){
-            e.printStackTrace();
+            new TokenException("加密算法匹配失败异常!");
+            res = false;
+        }
+        catch (TokenExpiredException tokenExpiredException){
+            new TokenException("token失效异常!");
+            res = false;
         }catch (Exception e){
-            e.printStackTrace();
+            new TokenException("其他异常!");
+            res = false;
         }
         return res;
     }

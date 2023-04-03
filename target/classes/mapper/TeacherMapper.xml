@@ -13,10 +13,18 @@
     <select id="getTeacherByCourseId" parameterType="java.lang.String" resultType="org.example.entity.Teacher">
         select * from teachers where teach_id = (select teach_id from courses where course_id = #{course_id})
     </select>
+    <!-- 根据讲师id查询讲师 -->
+    <select id="queryTeacherById" parameterType="java.lang.String" resultType="org.example.entity.Teacher">
+        select * from teachers where teach_id=#{teach_id}
+    </select>
     <!-- 插入一个讲师 -->
     <insert id="insertTeacher" parameterType="org.example.entity.Teacher">
-        insert into teachers(teach_id,user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief) values (#{teach_id},#{user_id},#{user_tel},#{teach_field},#{teach_class},#{user_sex},#{user_age},#{user_tage},#{user_brief})
+        insert into teachers(teach_id,user_id,user_tel,teach_field,teach_class,user_sex,user_age,user_tage,user_brief,check_status) values (#{teach_id},#{user_id},#{user_tel},#{teach_field},#{teach_class},#{user_sex},#{user_age},#{user_tage},#{user_brief},#{check_status})
     </insert>
+    <!-- 更新一个讲师 -->
+    <update id="updateTeacher" parameterType="org.example.entity.Teacher">
+        update teachers set check_status=#{check_status} where teach_id=#{teach_id}
+    </update>
     <!-- 插入一个讲师守则 -->
     <insert id="insertRule" parameterType="org.example.entity.Rule">
         insert into rules(rule_id,rule_content) values (#{rule_id},#{rule_content})

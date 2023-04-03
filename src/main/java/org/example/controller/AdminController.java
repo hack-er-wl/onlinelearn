@@ -212,4 +212,16 @@ public class AdminController {
         result =  res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
+    //审核课程
+    @RequestMapping("/update/course/check")
+    @ResponseBody
+    public Result updateCourseCheck(
+            @RequestParam(value = "courseid") String course_id,
+            @RequestParam(value = "code") int course_check) {
+        Course course = courseService.queryCourseById(course_id);
+        course.setCourse_check(course_check);
+        int res = updateService.updateCourseStatus(course);
+        result =  res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
 }

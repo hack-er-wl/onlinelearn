@@ -37,9 +37,13 @@
     <insert id="insertBar" parameterType="org.example.entity.Bar">
         insert into bars(bar_id,chapter_id,bar_order,bar_name,bar_url) values (#{bar_id},#{chapter_id},#{bar_order},#{bar_name},#{bar_url})
     </insert>
-    <!-- 更新一个课程 -->
+    <!-- 更新一个课程订阅 -->
     <update id="updateCourseSubNum" parameterType="org.example.entity.Course">
         update courses set subscribe_num=#{subscribe_num} where course_id=#{course_id}
+    </update>
+    <!-- 更新一个课程审核 -->
+    <update id="updateCourseStatus" parameterType="org.example.entity.Course">
+        update courses set course_check=#{course_check} where course_id=#{course_id}
     </update>
     <!-- 插入一个课程领域 -->
     <insert id="insertCourseField" parameterType="org.example.entity.CField">

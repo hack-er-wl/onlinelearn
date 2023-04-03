@@ -20,6 +20,7 @@ public interface CourseMapper {
     int insertChapter(Chapter chapter);
     int insertBar(Bar bar);
     int updateCourseSubNum(Course course);
+    int updateCourseStatus(Course course);
     int insertCourseField(CField cField);
     List queryCourseField();
     List queryCourseClassAll();

@@ -1,7 +1,9 @@
 package org.example.service;
 
+import org.example.entity.Course;
 import org.example.entity.Teacher;
 import org.example.entity.User;
+import org.example.mapper.CourseMapper;
 import org.example.mapper.TeacherMapper;
 import org.example.mapper.UserMapper;
 import org.example.service.impl.UpdateServiceImpl;
@@ -13,6 +15,8 @@ import javax.annotation.Resource;
 public class UpdateService implements UpdateServiceImpl {
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private CourseMapper courseMapper;
     @Resource
     private TeacherMapper teacherMapper;
     @Override
@@ -28,6 +32,11 @@ public class UpdateService implements UpdateServiceImpl {
     @Override
     public int updateTeacher(Teacher teacher) {
         return teacherMapper.updateTeacher(teacher);
+    }
+
+    @Override
+    public int updateCourseStatus(Course course) {
+        return courseMapper.updateCourseStatus(course);
     }
 
     @Override

@@ -10,6 +10,8 @@
       <option name="customHeaders">
         <set>
           <option value="token" />
+          <option value="miss-token" />
+          <option value="missed-token" />
         </set>
       </option>
     </inspection_tool>

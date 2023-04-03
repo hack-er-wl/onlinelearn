@@ -13,7 +13,7 @@ public class Course {
     private String course_brief;
     private int subscribe_num;
     private String course_cover;
-    private int course_check;
+    private int course_check;//课程审核状态(0审核中,1通过，2未通过)
     public Course(String course_id,String class_id,String teach_id,int course_status,int course_fee,String course_name,String course_brief,int subscribe_num,String course_cover,int course_check){
         this.course_id = course_id;
         this.class_id = class_id;

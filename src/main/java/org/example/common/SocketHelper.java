@@ -20,7 +20,6 @@ public class SocketHelper implements ApplicationContextAware {
     }
 
     public static Object getBean(String beanName) {
-//		System.out.println(applicationContext);
         return applicationContext.getBean(beanName);
     }
 

@@ -43,4 +43,9 @@ public class UpdateService implements UpdateServiceImpl {
     public Teacher queryTeacherById(String teach_id) {
         return teacherMapper.queryTeacherById(teach_id);
     }
+
+    @Override
+    public int updateUserRole(User user) {
+        return userMapper.updateUserRole(user);
+    }
 }

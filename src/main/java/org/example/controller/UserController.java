@@ -454,7 +454,7 @@ public class UserController {
         Teacher isTeacher = applyService.checkTeacher(user_id);
         if(isTeacher == null){
             int res = applyService.applyForTeacher(teacher);
-            result = res == 1 ? new Result(teacher,"操作成功",200):new Result("","操作失败",404);
+            result = res == 1 ? new Result(teacher,"操作成功",200):new Result("","申请失败",404);
         }else{
             result =  new Result("","你已经是讲师，请进入'我是讲师'界面操作！",500);
         }

@@ -209,7 +209,14 @@ public class AdminController {
         Teacher teacher = updateService.queryTeacherById(teach_id);
         teacher.setCheck_status(check_status);
         int res = updateService.updateTeacher(teacher);
-        result =  res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        if(res == 1){
+            User user = loginService.getUserById(teacher.getUser_id());
+            user.setUser_role(2);
+            int res_u = updateService.updateUserRole(user);
+            result = res_u == 1 ? new Result(teacher,"审核成功",200):new Result("","审核失败",404);
+        }else{
+            result = new Result("","操作失败",505);
+        }
         return result;
     }
     //审核课程

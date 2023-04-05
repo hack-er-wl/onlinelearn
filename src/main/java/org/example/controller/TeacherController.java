@@ -31,6 +31,8 @@ public class TeacherController {
     private SubscribeService subscribeService;
     @Resource
     private TestService testService;
+    @Resource
+    private UpdateService updateService;
     private Result result;
     //讲师身份判断
     @RequestMapping("/check")

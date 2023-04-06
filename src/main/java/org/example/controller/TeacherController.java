@@ -186,9 +186,9 @@ public class TeacherController {
     public Result postCourseBar(
             @RequestParam(value = "chapterid") String chapter_id,
             @RequestParam(value = "barorder") int bar_order,
-            @RequestParam(value = "barname") String bar_name) {
-        String bar_id = Utils.getId();
-        String bar_url = "http://localhost:8080/static/"+bar_id+".mp4";
+            @RequestParam(value = "barname") String bar_name,
+            @RequestParam(value = "barurl") String bar_url) {
+        String bar_id = bar_url.substring(29,39);
         Bar bar = new Bar(bar_id,chapter_id,bar_order,bar_name,bar_url);
         int res = postService.postBar(bar);
         result = res == 1 ? new Result(bar,"操作成功",200):new Result("","操作失败",404);
@@ -216,6 +216,19 @@ public class TeacherController {
     public String uploadImage(MultipartFile file) {
         String path = "D:/projects/java/onlineLearn/src/main/resources/static";//本地资源路径
         String file_name = Utils.getId()+".png";
+        try {
+            file.transferTo(new File(path, file_name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "http://localhost:8080/static/" + file_name;//返回路径
+    }
+    //上传视频
+    @RequestMapping("/upload/video")
+    @ResponseBody
+    public String uploadVideo(MultipartFile file) {
+        String path = "D:/projects/java/onlineLearn/src/main/resources/static";//本地资源路径
+        String file_name = Utils.getId()+".mp4";
         try {
             file.transferTo(new File(path, file_name));
         } catch (IOException e) {

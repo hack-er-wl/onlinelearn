@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.entity.Choose;
 import org.example.entity.Option;
+import org.example.entity.ParticipateInfo;
 import org.example.entity.Test;
 import org.example.mapper.TestMapper;
 import org.example.service.impl.TestServiceImpl;
@@ -39,10 +40,18 @@ public class TestService implements TestServiceImpl {
     }
 
     @Override
+    public int participateTest(ParticipateInfo participateInfo) {
+        return testMapper.participateTest(participateInfo);
+    }
+    @Override
     public List queryTestByCourseId(String course_id) {
         return testMapper.queryTestByCourseId(course_id);
     }
 
+    @Override
+    public List queryTestByTeachId(String teach_id) {
+        return testMapper.queryTestByTeachId(teach_id);
+    }
     @Override
     public List queryChooseByTestId(String test_id) {
         return testMapper.queryChooseByTestId(test_id);
@@ -53,6 +62,15 @@ public class TestService implements TestServiceImpl {
         return testMapper.queryOptionByTestId(test_id);
     }
 
+    @Override
+    public List queryRank(String test_id) {
+        return testMapper.queryRank(test_id);
+    }
+
+    @Override
+    public ParticipateInfo queryParticipate(String user_id, String test_id) {
+        return testMapper.queryParticipate(user_id,test_id);
+    }
     @Override
     public List queryTestAll() {
         return testMapper.queryTestAll();

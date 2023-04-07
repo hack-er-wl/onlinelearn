@@ -14,4 +14,5 @@ public interface UpdateServiceImpl {
     int updateCourseStatus(Course course);
     Teacher queryTeacherById(String teach_id);
     int updateUserRole(User user);
+    int updateUserMoney(User user);
 }

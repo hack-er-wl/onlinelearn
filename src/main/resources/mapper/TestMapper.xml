@@ -5,6 +5,10 @@
     <select id="queryTestByCourseId" parameterType="java.lang.String" resultType="org.example.entity.Test">
         select * from tests where course_id=#{course_id}
     </select>
+    <!-- 根据讲师id查询测试 -->
+    <select id="queryTestByTeachId" parameterType="java.lang.String" resultType="org.example.entity.Test">
+        select * from tests where teach_id=#{teach_id}
+    </select>
     <!-- 根据测试id查询选择题 -->
     <select id="queryChooseByTestId" parameterType="java.lang.String" resultType="org.example.entity.Choose">
         select * from chooses where test_id=#{test_id}
@@ -29,6 +33,18 @@
     <insert id="insertTest" parameterType="org.example.entity.Test">
         insert into tests(test_id,course_id,teach_id,test_name,ques_num,test_time,use_time) values (#{test_id},#{course_id},#{teach_id},#{test_name},#{ques_num},#{test_time},#{use_time})
     </insert>
+    <!-- 根据测试id查询排名 -->
+    <select id="queryRank" parameterType="java.lang.String" resultType="org.example.entity.ParticipateInfo">
+        select * from participate where test_id=#{test_id}
+    </select>
+    <!-- 插入一个参加测试信息 -->
+    <insert id="participateTest" parameterType="org.example.entity.ParticipateInfo">
+        insert into participate(user_id,test_id,score) values (#{user_id},#{test_id},#{score})
+    </insert>
+    <!-- 根据用户id,测试id查询测参加测试信息-->
+    <select id="queryParticipate" parameterType="java.lang.String" resultType="org.example.entity.ParticipateInfo">
+        select * from participate where user_id=#{user_id} and test_id=#{test_id}
+    </select>
     <!-- 插入一个选择题 -->
     <insert id="insertChoose" parameterType="org.example.entity.Choose">
         insert into chooses(choose_id,test_id,option_key,option_answer,option_contain,option_a,option_b,option_c,option_d) values (#{choose_id},#{test_id},#{option_key},#{option_answer},#{option_contain},#{option_a},#{option_b},#{option_c},#{option_d})

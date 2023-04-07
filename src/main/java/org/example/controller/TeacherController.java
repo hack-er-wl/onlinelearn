@@ -83,10 +83,18 @@ public class TeacherController {
         result = map.size() != 0 ? new Result(map,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
+    //查询该讲师发布的测试
+    @RequestMapping("/query/test")
+    @ResponseBody
+    public Result queryTest(@RequestParam(value = "teachid") String teach_id) {
+        List<Course> list = testService.queryTestByTeachId(teach_id);
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
     //查询讲师守则
     @RequestMapping("/query/rule")
     @ResponseBody
-    public Result queryCourse() {
+    public Result queryRules() {
         List<Rule> list = postService.getRule();
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;

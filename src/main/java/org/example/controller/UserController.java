@@ -229,7 +229,7 @@ public class UserController {
         Course course = courseService.getCourseByCourseId(course_id);
         course.setSubscribe_num(course.getSubscribe_num()+1);
         //生成订单
-        Order order = new Order(order_id,course.getCourse_name(),course.getCourse_fee(),Utils.getTime(),null,0,"微信");
+        Order order = new Order(order_id,course.getCourse_name(),course.getCourse_fee(),Utils.getTime(),Utils.getTime(),1,"微信");
         //插入订单和订阅信息
         int orderRes = orderService.insertOrder(order);
         if(orderRes == 1){
@@ -523,17 +523,48 @@ public class UserController {
         result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;
     }
+    //参加测试
+    @RequestMapping("/participate/test")
+    @ResponseBody
+    public Result participateTest(
+            @RequestParam(value = "userid") String user_id,
+            @RequestParam(value = "testid") String test_id,
+            @RequestParam(value = "score") int score){
+        ParticipateInfo participateInfo = new ParticipateInfo(user_id,test_id,score);
+        int res = testService.participateTest(participateInfo);
+        result = res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
+    //查询测试排名
+    @RequestMapping("/query/rank")
+    @ResponseBody
+    public Result queryRank(@RequestParam(value = "testid") String test_id){
+        List<ParticipateInfo> list = testService.queryRank(test_id);
+        List<Map> res = new ArrayList<>();
+        for(ParticipateInfo participateInfo:list){
+            Map<String,Object> map = new HashMap<>();
+            User user = assessService.queryUserById(participateInfo.getUser_id());
+            map.put("user_name",user.getUser_name());
+            map.put("user_head",user.getUser_head());
+            map.put("score",participateInfo.getScore());
+            res.add(map);
+        }
+        result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
+        return result;
+    }
     //通过courseid查询所有的测试
     @RequestMapping("/query/test")
     @ResponseBody
     public Result queryTestByCourseId(
-            @RequestParam(value = "courseid") String course_id) {
+            @RequestParam(value = "courseid") String course_id,
+            @RequestParam(value = "userid") String user_id) {
         List<Test> tests = testService.queryTestByCourseId(course_id);
         List<Map> list = new ArrayList<>();
         for (Test test:tests) {
             Map<String,Object> map = new HashMap<>();
             List<Choose> chooses = testService.queryChooseByTestId(test.getTest_id());
             List<Choose> options = testService.queryOptionByTestId(test.getTest_id());
+            ParticipateInfo participateInfo = testService.queryParticipate(user_id,test.getTest_id());
             map.put("test_id",test.getTest_id());
             map.put("teach_id",test.getTeach_id());
             map.put("ques_num",test.getQues_num());
@@ -543,6 +574,7 @@ public class UserController {
             map.put("test_name",test.getTest_name());
             map.put("test_chooses",chooses);
             map.put("test_options",options);
+            map.put("participate",participateInfo!=null?true:false);
             list.add(map);
         }
         result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
@@ -626,6 +658,26 @@ public class UserController {
         PointerInfo pointerInfo = new PointerInfo(user_id,reply_id);
         int res = assessService.replyPointCancel(pointerInfo);
         result = res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //用户充值
+    @RequestMapping("/charge/money")
+    @ResponseBody
+    public Result chargeMoney(
+            @RequestParam(value = "userid") String user_id,
+            @RequestParam(value = "usermoney") int user_money) {
+        User user = assessService.queryUserById(user_id);
+        user.setUser_money(user.getUser_money()+user_money);
+        int res = updateService.updateUserMoney(user);
+        result = res != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //用户充值以后更新用户
+    @RequestMapping("/update/after/charge")
+    @ResponseBody
+    public Result updateAfterCharge(@RequestParam(value = "userid") String user_id) {
+        User user = assessService.queryUserById(user_id);
+        result = user != null ? new Result(user,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
 }

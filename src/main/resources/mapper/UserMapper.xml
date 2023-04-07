@@ -25,6 +25,10 @@
     <update id="updateUserRole" parameterType="org.example.entity.User">
         update users set user_role=#{user_role} where user_id=#{user_id}
     </update>
+    <!-- 更新一个用户余额 -->
+    <update id="updateUserMoney" parameterType="org.example.entity.User">
+        update users set user_money=#{user_money} where user_id=#{user_id}
+    </update>
     <!-- 更新用户密码 -->
     <update id="updateUserPass" parameterType="org.example.entity.User">
         update users set user_pass=#{user_pass} where user_id=#{user_id}

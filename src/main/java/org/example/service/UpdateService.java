@@ -48,4 +48,9 @@ public class UpdateService implements UpdateServiceImpl {
     public int updateUserRole(User user) {
         return userMapper.updateUserRole(user);
     }
+
+    @Override
+    public int updateUserMoney(User user) {
+        return userMapper.updateUserMoney(user);
+    }
 }

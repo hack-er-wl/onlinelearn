@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 public interface SubscribeServiceImpl {
-    int subscribeCourse(String user_id,String course_id,String order_id);
+    int subscribeCourse(SubscribeInfo subscribeInfo);
     int collectCourse(String user_id,String course_id);
     SubscribeInfo querySubscribeCourse(String user_id, String course_id);
     CollectInfo queryCollectCourse(String user_id, String course_id);

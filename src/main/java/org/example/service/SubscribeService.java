@@ -15,8 +15,8 @@ public class SubscribeService implements SubscribeServiceImpl {
     @Resource
     private SubscribeMapper subscribeMapper;
     @Override
-    public int subscribeCourse(String user_id, String course_id, String order_id) {
-        return subscribeMapper.subscribeCourse(user_id,course_id,order_id);
+    public int subscribeCourse(SubscribeInfo subscribeInfo) {
+        return subscribeMapper.subscribeCourse(subscribeInfo);
     }
 
     @Override

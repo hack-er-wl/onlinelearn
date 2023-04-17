@@ -60,8 +60,9 @@ public class UserController {
     //登录
     @RequestMapping("/login")
     @ResponseBody
-    public Result login(@RequestParam(value = "email") String email,
-                      @RequestParam(value = "password") String password) {
+    public Result login(
+            @RequestParam(value = "email") String email,
+             @RequestParam(value = "password") String password) {
         User user = loginService.login(email);
         if(user.getUser_pass().equals(password)) {
             //获取token
@@ -233,7 +234,8 @@ public class UserController {
         //插入订单和订阅信息
         int orderRes = orderService.insertOrder(order);
         if(orderRes == 1){
-            int subRes = subscribeService.subscribeCourse(user_id,course_id,order_id);
+            SubscribeInfo subscribeInfo = new SubscribeInfo(user_id,course_id,order_id);
+            int subRes = subscribeService.subscribeCourse(subscribeInfo);
             int subNum = courseService.updateCourseSubNum(course);
             if(subRes == 1 && subNum == 1){
                 result = new Result(order,"操作成功",200);

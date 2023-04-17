@@ -108,8 +108,15 @@ public class UserController {
     //根据课程状态查询
     @RequestMapping("/query/course/bystatus")
     @ResponseBody
-    public Result getCourseByStatus(@RequestParam(value = "status") int course_status){
-        List list = courseService.getCourseByStatus(course_status);
+    public Result getCourseByStatus(
+            @RequestParam(value = "status") int course_status,
+            @RequestParam(value = "length") int res_length){
+        List list = new ArrayList();
+        if(res_length != -1){
+            list.addAll(courseService.getCourseByStatus(course_status).subList(0,res_length));
+        }else{
+            list.addAll(courseService.getCourseByStatus(course_status));
+        }
         result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
         return result;
     }

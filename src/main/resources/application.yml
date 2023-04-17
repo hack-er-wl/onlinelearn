@@ -7,10 +7,10 @@ spring:
     url: jdbc:mysql://localhost:3305/onlinelearn?useUnicode=true&useJDBCCompliantTimezoneShift=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
-  mybatis-plus:
-    mapper-locations: classpath*:/mapper/**Mapper.xml
   server:
     port: 8080
+  mybatis-plus:
+    mapper-locations: classpath*:/mapper/**Mapper.xml
   servlet:
     multipart:
       max-request-size: 10MB

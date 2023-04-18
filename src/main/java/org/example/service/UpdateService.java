@@ -1,8 +1,6 @@
 package org.example.service;
 
-import org.example.entity.Course;
-import org.example.entity.Teacher;
-import org.example.entity.User;
+import org.example.entity.*;
 import org.example.mapper.CourseMapper;
 import org.example.mapper.TeacherMapper;
 import org.example.mapper.UserMapper;
@@ -35,8 +33,18 @@ public class UpdateService implements UpdateServiceImpl {
     }
 
     @Override
+    public int updateCourseCheck(Course course) {
+        return courseMapper.updateCourseCheck(course);
+    }
+
+    @Override
     public int updateCourseStatus(Course course) {
         return courseMapper.updateCourseStatus(course);
+    }
+
+    @Override
+    public int updateClassStatus(CClass cClass) {
+        return courseMapper.updateClassStatus(cClass);
     }
 
     @Override
@@ -50,7 +58,27 @@ public class UpdateService implements UpdateServiceImpl {
     }
 
     @Override
+    public int updateRule(Rule rule) {
+        return teacherMapper.updateRule(rule);
+    }
+
+    @Override
+    public int deleteRule(String rule_id) {
+        return teacherMapper.deleteRule(rule_id);
+    }
+
+    @Override
     public int updateUserMoney(User user) {
         return userMapper.updateUserMoney(user);
+    }
+
+    @Override
+    public int updateUserName(User user) {
+        return userMapper.updateUserName(user);
+    }
+
+    @Override
+    public int updateTeacherInfo(Teacher teacher) {
+        return teacherMapper.updateTeacherInfo(teacher);
     }
 }

@@ -45,4 +45,9 @@ public class PostService implements PostServiceImpl {
     public List getRule() {
         return teacherMapper.getRule();
     }
+
+    @Override
+    public Rule getRuleById(String rule_id) {
+        return teacherMapper.getRuleById(rule_id);
+    }
 }

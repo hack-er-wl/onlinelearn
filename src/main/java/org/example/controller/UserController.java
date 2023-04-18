@@ -37,6 +37,8 @@ public class UserController {
     @Resource
     private OrderService orderService;
     @Resource
+    private MenuService menuService;
+    @Resource
     private HttpServletResponse response;
 
     //发送邮件
@@ -74,6 +76,15 @@ public class UserController {
         }else{
             result = new Result("","邮箱或密码错误",404);
         }
+        return result;
+    }
+    //查询菜单
+    @RequestMapping("/query/menu")
+    @ResponseBody
+    public Result queryMenu(@RequestParam(value = "role") int user_role) {
+        List<Menu> list = menuService.getMenu(0);
+        list.addAll(menuService.getMenu(user_role));
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
     //完善用户信息
@@ -270,10 +281,18 @@ public class UserController {
     @ResponseBody
     public Result querySubscribeCourse(@RequestParam(value = "userid") String user_id) {
         List<SubscribeInfo> list = subscribeService.querySubscribeCourseAll(user_id);
-        List<Course> res = new ArrayList<>();
+        List<Map> res = new ArrayList<>();
         for(SubscribeInfo subscribeInfo:list){
+            Map<String,Object> map = new HashMap<>();
             Course course = courseService.queryCourseById(subscribeInfo.getCourse_id());
-            res.add(course);
+            Teacher teacher = updateService.queryTeacherById(course.getTeach_id());
+            User user = assessService.queryUserById(teacher.getUser_id());
+            map.put("course_cover",course.getCourse_cover());
+            map.put("course_name",course.getCourse_name());
+            map.put("course_fee",course.getCourse_fee());
+            map.put("subscribe_num",course.getSubscribe_num());
+            map.put("teach_name",user.getUser_name());
+            res.add(map);
         }
         result = res.size() != 0 ? new Result(res,"操作成功",200):new Result("","操作失败",404);
         return result;

@@ -12,4 +12,5 @@ public interface PostServiceImpl {
     int postBar(Bar bar);
     int insertRule(Rule rule);
     List getRule();
+    Rule getRuleById(String rule_id);
 }

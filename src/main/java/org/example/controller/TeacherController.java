@@ -33,6 +33,8 @@ public class TeacherController {
     private TestService testService;
     @Resource
     private UpdateService updateService;
+    @Resource
+    private LoginService loginService;
     private Result result;
     //讲师身份判断
     @RequestMapping("/check")
@@ -47,6 +49,8 @@ public class TeacherController {
             map.put("user_tel",teacher.getUser_tel());
             map.put("user_sex",teacher.getUser_sex());
             map.put("user_age",teacher.getUser_age());
+            map.put("teach_field",teacher.getTeach_field());
+            map.put("teach_class",teacher.getTeach_class());
             map.put("user_tage",teacher.getUser_tage());
             map.put("user_brief",teacher.getUser_brief());
             map.put("user_name",user.getUser_name());
@@ -55,6 +59,39 @@ public class TeacherController {
             result = map != null ? new Result(map,"操作成功",200):new Result("","操作失败",500);
         }else{
             result = new Result("","你不是讲师，请先申请讲师！",200);
+        }
+        return result;
+    }
+    //更新呢讲师信息
+    @RequestMapping("/update")
+    @ResponseBody
+    public Result updateTeacherInfo(
+            @RequestParam(value = "teachid") String teach_id,
+            @RequestParam(value = "userid") String user_id,
+            @RequestParam(value = "username") String user_name,
+            @RequestParam(value = "usertel") String user_tel,
+            @RequestParam(value = "teachfield") String teach_field,
+            @RequestParam(value = "teachclass") String teach_class,
+            @RequestParam(value = "usersex") int user_sex,
+            @RequestParam(value = "userage") int user_age,
+            @RequestParam(value = "usertage") int user_tage,
+            @RequestParam(value = "userbrief") String user_brief) {
+        Teacher teacher = updateService.queryTeacherById(teach_id);
+        User user = loginService.getUserById(user_id);
+        teacher.setUser_tel(user_tel);
+        teacher.setTeach_field(teach_field);
+        teacher.setTeach_class(teach_class);
+        teacher.setUser_sex(user_sex);
+        teacher.setUser_age(user_age);
+        teacher.setUser_tage(user_tage);
+        teacher.setUser_brief(user_brief);
+        user.setUser_name(user_name);
+        int res_u = updateService.updateUserName(user);
+        if(res_u == 1){
+            int res_t = updateService.updateTeacherInfo(teacher);
+            result = res_t != 0 ? new Result(res_t,"操作成功",200):new Result("","操作失败",500);
+        }else{
+            result = new Result("","操作失败",404);
         }
         return result;
     }

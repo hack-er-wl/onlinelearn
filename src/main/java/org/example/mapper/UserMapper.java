@@ -1,7 +1,6 @@
 package org.example.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.example.entity.PointerInfo;
 import org.example.entity.User;
 
 import java.util.List;
@@ -17,4 +16,5 @@ public interface UserMapper {
     int updateUserPass(User user);
     int updateUserRole(User user);
     int updateUserMoney(User user);
+    int updateUserName(User user);
 }

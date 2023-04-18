@@ -4,6 +4,7 @@
       <w>acceptid</w>
       <w>allcourse</w>
       <w>assessid</w>
+      <w>avatarurl</w>
       <w>barname</w>
       <w>barorder</w>
       <w>barurl</w>
@@ -42,8 +43,11 @@
       <w>orderid</w>
       <w>quesnum</w>
       <w>rulecontent</w>
+      <w>ruleid</w>
       <w>sliderid</w>
       <w>sliderurl</w>
+      <w>teachclass</w>
+      <w>teachfield</w>
       <w>teachid</w>
       <w>teacid</w>
       <w>testid</w>

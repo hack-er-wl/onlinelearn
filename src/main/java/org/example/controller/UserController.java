@@ -246,23 +246,31 @@ public class UserController {
         String order_id = Utils.getId();
         //查询课程
         Course course = courseService.getCourseByCourseId(course_id);
+        //查询用户
+        User user = assessService.queryUserById(user_id);
         course.setSubscribe_num(course.getSubscribe_num()+1);
-        //生成订单
-        Order order = new Order(order_id,course.getCourse_name(),course.getCourse_fee(),Utils.getTime(),Utils.getTime(),1,"微信");
-        //插入订单和订阅信息
-        int orderRes = orderService.insertOrder(order);
-        if(orderRes == 1){
-            SubscribeInfo subscribeInfo = new SubscribeInfo(user_id,course_id,order_id);
-            int subRes = subscribeService.subscribeCourse(subscribeInfo);
-            int subNum = courseService.updateCourseSubNum(course);
-            if(subRes == 1 && subNum == 1){
-                result = new Result(order,"操作成功",200);
+        if(user.getUser_money() >= course.getCourse_fee()){
+            //生成订单
+            Order order = new Order(order_id,course.getCourse_name(),course.getCourse_fee(),Utils.getTime(),Utils.getTime(),1,"微信");
+            user.setUser_money(user.getUser_money() - course.getCourse_fee());
+            updateService.updateUserMoney(user);
+            //插入订单和订阅信息
+            int orderRes = orderService.insertOrder(order);
+            if(orderRes == 1){
+                SubscribeInfo subscribeInfo = new SubscribeInfo(user_id,course_id,order_id);
+                int subRes = subscribeService.subscribeCourse(subscribeInfo);
+                int subNum = courseService.updateCourseSubNum(course);
+                if(subRes == 1 && subNum == 1){
+                    result = new Result(order,"操作成功",200);
+                }else{
+                    orderService.cancelOrder(order_id);//订阅失败删除订单消息
+                    result = new Result("","操作失败",404);
+                }
             }else{
-                orderService.cancelOrder(order_id);//订阅失败删除订单消息
-                result = new Result("","操作失败",404);
+                result = new Result("","订单插入失败",404);
             }
         }else{
-            result = new Result("","订单插入失败",404);
+            result = new Result("","余额不足",500);
         }
         return result;
     }

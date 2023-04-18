@@ -21,6 +21,10 @@
     <update id="updateUser" parameterType="org.example.entity.User">
         update users set user_like=#{user_like},user_add=#{user_add} where user_id=#{user_id}
     </update>
+    <!-- 更新一个用户信息 -->
+    <update id="updateUserName" parameterType="org.example.entity.User">
+        update users set user_name=#{user_name} where user_id=#{user_id}
+    </update>
     <!-- 更新一个用户角色 -->
     <update id="updateUserRole" parameterType="org.example.entity.User">
         update users set user_role=#{user_role} where user_id=#{user_id}

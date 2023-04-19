@@ -295,6 +295,8 @@ public class UserController {
             Course course = courseService.queryCourseById(subscribeInfo.getCourse_id());
             Teacher teacher = updateService.queryTeacherById(course.getTeach_id());
             User user = assessService.queryUserById(teacher.getUser_id());
+            map.put("course_id",course.getCourse_id());
+            map.put("course_brief",course.getCourse_brief());
             map.put("course_cover",course.getCourse_cover());
             map.put("course_name",course.getCourse_name());
             map.put("course_fee",course.getCourse_fee());

@@ -23,6 +23,12 @@ public class LoginService implements LoginServiceImpl {
     public User getUserById(String user_id) {
         return userMapper.getUserById(user_id);
     }
+
+    @Override
+    public List getUserByLike(User user) {
+        return userMapper.getUserByLike(user);
+    }
+
     @Override
     public List getUserAll() {
         return userMapper.getUserAll();

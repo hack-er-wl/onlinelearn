@@ -9,9 +9,13 @@
     <select id="getUserById" parameterType="java.lang.String" resultType="org.example.entity.User">
         select * from users where user_id = #{user_id}
     </select>
-    <!-- 根据所有用户 -->
+    <!-- 查询所有用户 -->
     <select id="getUserAll" resultType="org.example.entity.User">
         select * from users
+    </select>
+    <!-- 根据用户兴趣查询用户 -->
+    <select id="getUserByLike" parameterType="org.example.entity.User" resultType="org.example.entity.User">
+        select * from users where user_like = #{user_like} and user_id!=#{user_id}
     </select>
     <!-- 根据所有讲师 -->
     <select id="getTeacherAll" resultType="org.example.entity.Teacher">

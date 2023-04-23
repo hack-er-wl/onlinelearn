@@ -26,4 +26,9 @@ public class OrderService implements OrderServiceImpl {
     public Order queryOrder(String user_id) {
         return orderMapper.queryOrder(user_id);
     }
+
+    @Override
+    public List queryOrderAll() {
+        return orderMapper.queryOrderAll();
+    }
 }

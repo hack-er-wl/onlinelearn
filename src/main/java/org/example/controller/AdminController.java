@@ -34,6 +34,8 @@ public class AdminController {
     @Resource
     private UpdateService updateService;
     @Resource
+    private OrderService orderService;
+    @Resource
     private ResourceService resourceService;
     @Resource
     private HttpServletResponse response;
@@ -206,11 +208,19 @@ public class AdminController {
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }
-    //查询所有判断
+    //查询所有小节
     @RequestMapping("/query/bar")
     @ResponseBody
     public Result queryBar() {
         List<Test> list = courseService.queryBarAll();
+        result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
+        return result;
+    }
+    //查询所有订单
+    @RequestMapping("/query/order")
+    @ResponseBody
+    public Result queryOderAll() {
+        List<Order> list = orderService.queryOrderAll();
         result = list.size() != 0 ? new Result(list,"操作成功",200):new Result("","操作失败",500);
         return result;
     }

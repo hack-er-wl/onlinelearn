@@ -134,8 +134,29 @@ public class UserController {
     //获取推荐课程
     @RequestMapping("/query/course/recommend")
     @ResponseBody
-    public Result getRecommendCourse(){
-        List list = courseService.getRecommendCourse(4);
+    public Result getRecommendCourse(@RequestParam(value = "userid") String user_id){
+        List list = new ArrayList();
+        User target = loginService.getUserById(user_id);
+        if(target.getUser_like()!=null){
+            List<User> users = loginService.getUserByLike(target);
+            for(User user:users){
+                List<CollectInfo> infos = subscribeService.queryCollectCourseByUid(user.getUser_id());
+                if(list.size() < 4){
+                    for(CollectInfo info:infos){
+                        if(list.size() < 4) {
+                            Course course = courseService.queryCourseById(info.getCourse_id());
+                            list.add(course);
+                        }else{
+                            break;
+                        }
+                    }
+                }else{
+                    break;
+                }
+            }
+        }else{
+            list.addAll(courseService.getRecommendCourse(4));
+        }
         result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);
         return result;
     }

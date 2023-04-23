@@ -10,4 +10,5 @@ public interface OrderServiceImpl {
     int insertOrder(Order order);
     int cancelOrder(String order_id);
     Order queryOrder(String user_id);
+    List queryOrderAll();
 }

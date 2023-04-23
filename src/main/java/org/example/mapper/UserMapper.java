@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserMapper {
     User getUserByEmail(String email);
     User getUserById(String user_id);
+    List getUserByLike(User user);
     List getUserAll();
     List getTeacherAll();
     int insertUser(User user);

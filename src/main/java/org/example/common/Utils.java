@@ -6,13 +6,16 @@ import com.auth0.jwt.exceptions.AlgorithmMismatchException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.example.entity.CollectInfo;
+import org.example.entity.Course;
+import org.example.entity.User;
 import org.example.exception.TokenException;
+import org.example.service.CourseService;
+import org.example.service.LoginService;
+import org.example.service.SubscribeService;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Utils {
     //随机数对象
@@ -81,5 +84,8 @@ public class Utils {
             res = false;
         }
         return res;
+    }
+    public static int myRandom(int min,int max){
+        return random.nextInt(max)+min;
     }
 }

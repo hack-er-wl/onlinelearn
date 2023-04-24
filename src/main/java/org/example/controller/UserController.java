@@ -137,11 +137,13 @@ public class UserController {
     public Result getRecommendCourse(@RequestParam(value = "userid") String user_id){
         List list = new ArrayList();
         User target = loginService.getUserById(user_id);
-        if(target.getUser_like()!=null){
-            List<User> users = loginService.getUserByLike(target);
-            for(User user:users){
+        if(target.getUser_like()!=null){//目标用户有兴趣信息时
+            List<User> users = loginService.getUserByLike(target);//找到有相同兴趣的用户
+            if(users.size() != 0){//用户数不为0时
+                int rand = Utils.myRandom(0,users.size());//产生一个随机数
+                User user = users.get(rand);//随机取一个用户
                 List<CollectInfo> infos = subscribeService.queryCollectCourseByUid(user.getUser_id());
-                if(list.size() < 4){
+                if(infos.size() != 0){//随机用户有收藏信息时
                     for(CollectInfo info:infos){
                         if(list.size() < 4) {
                             Course course = courseService.queryCourseById(info.getCourse_id());
@@ -150,11 +152,16 @@ public class UserController {
                             break;
                         }
                     }
-                }else{
-                    break;
+                    if(list.size() < 4) {//如果随机用户收藏不足4个时
+                        list.addAll(courseService.getRecommendCourse(4 - list.size()));
+                    }
+                }else{//随机用户没有收藏信息时
+                    list.addAll(courseService.getRecommendCourse(4));
                 }
+            }else{//用户数为0时
+                list.addAll(courseService.getRecommendCourse(4));
             }
-        }else{
+        }else{//目标用户没有兴趣信息时
             list.addAll(courseService.getRecommendCourse(4));
         }
         result = list != null ? new Result(list,"操作成功",200):new Result("","操作失败",404);

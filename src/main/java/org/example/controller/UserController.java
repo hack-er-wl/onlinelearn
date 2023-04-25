@@ -145,7 +145,7 @@ public class UserController {
                 List<CollectInfo> infos = subscribeService.queryCollectCourseByUid(user.getUser_id());
                 if(infos.size() != 0){//随机用户有收藏信息时
                     for(CollectInfo info:infos){
-                        if(list.size() < 4) {
+                        if(list.size() < 4) {//当前推送未满4条时
                             Course course = courseService.queryCourseById(info.getCourse_id());
                             list.add(course);
                         }else{
